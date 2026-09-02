@@ -3,7 +3,8 @@
         xmlns:vm="using:ItemDatabaser.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+        Width="800" Height="500"
         x:Class="ItemDatabaser.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -15,6 +16,10 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid ColumnDefinitions="*, 3, 3*">
+        <UserControl HorizontalAlignment="Stretch" Grid.Column="0" Content="{Binding Structure}"/>
+        <GridSplitter Grid.Column="1" Width="5" Background="AliceBlue"/>
+        <UserControl HorizontalAlignment="Stretch" Grid.Column="2" Content="{Binding Inspector}"/>
+    </Grid>
 
 </Window>

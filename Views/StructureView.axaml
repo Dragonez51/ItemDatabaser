@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ItemDatabaser.ViewModels"
+             x:Class="ItemDatabaser.Views.StructureView"
+             x:DataType="vm:StructureViewModel">
+  <Grid RowDefinitions="9*, 1*">
+    <TreeView ItemsSource="{Binding Nodes}" SelectionChanged="TreeView_SelectionChanged" SelectionMode="Single" Grid.Row="0">
+      <TreeView.ItemTemplate>
+        <TreeDataTemplate ItemsSource="{Binding SubNodes}">
+          <TextBlock Text="{Binding Name}"/>
+        </TreeDataTemplate>
+      </TreeView.ItemTemplate>
+    </TreeView>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1">
+      <Button Content="[+] Add new Node" Click="Button_Click"/>
+    </StackPanel>
+  </Grid>
+</UserControl>

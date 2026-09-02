@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ds="clr-namespace:ItemDatabaser.DataStructures"
+        xmlns:v="clr-namespace:ItemDatabaser.Views"
+        xmlns:vm="clr-namespace:ItemDatabaser.ViewModels"
+        xmlns:cc="clr-namespace:ItemDatabaser.Controls"
+        x:Class="ItemDatabaser.Views.InspectorView"
+        x:DataType="vm:InspectorViewModel"
+        >
+    <Panel>
+        <TextBlock Text="Select a node!" IsVisible="{Binding IsTextVisible}" HorizontalAlignment="Center"/>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" IsVisible="{Binding IsPropertiesVisible}">
+                <Border BorderBrush="AliceBlue" BorderThickness="3">
+                    <TextBox Text="{Binding LoadedTreeNode.Name}" TextAlignment="Center" FontSize="28" FontWeight="Bold"/>
+                </Border>
+                <TableView ItemsSource="{Binding LoadedTreeNode.Properties}">
+                    <TableView.Columns>
+                        <TableViewColumn Header="Name">
+                            <TableViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </TableViewColumn.CellTemplate>
+                        </TableViewColumn>
+                        <TableViewColumn Header="Type">
+                            <TableViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding $parent[v:InspectorView].((vm:InspectorViewModel)DataContext).Types}" SelectedItem="{Binding BindValueType}"/>
+                                </DataTemplate>
+                            </TableViewColumn.CellTemplate>
+                        </TableViewColumn>
+                        <TableViewColumn Header="Value">
+                            <TableViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Value}"/>
+                                </DataTemplate>
+                            </TableViewColumn.CellTemplate>
+                        </TableViewColumn>
+                        <TableViewColumn Header="Remove">
+                            <TableViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="{Binding Name}" Content="[-]" Click="DeleteProperty"/>
+                                </DataTemplate>
+                            </TableViewColumn.CellTemplate>
+                        </TableViewColumn>
+                    </TableView.Columns>
+                    <TableView.Styles>
+                        <Style Selector="TableView">
+                            <Setter Property="BorderBrush" Value="#f00"/>
+                            <Setter Property="BorderThickness" Value="3"/>
+                            <!-- <Setter Property="HorizontalAlignment" Value="Stretch"/> -->
+                            <Setter Property="CanUserResizeColumns" Value="False"/>
+                            <!-- <Setter Property="" Value=""/> -->
+                        </Style>
+                        <!-- <Style Selector="TextBox">
+                            <Setter Property="TextAlignment" Value="Center"/>
+                        </Style>
+                        <Style Selector="TextBlock">
+                            <Setter Property="TextAlignment" Value="Center"/>
+                        </Style> -->
+                    </TableView.Styles>
+                </TableView>
+                <!-- <ItemsControl ItemsSource="{Binding LoadedTreeNode.Properties}" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="ds:Property">
+                            <Border HorizontalAlignment="Stretch">
+                                <Grid ColumnDefinitions="*, *, *, *">
+                                    <Border Grid.Column="0">
+                                        <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                    <Border Grid.Column="1">
+                                        <ComboBox ItemsSource="{Binding $parent[v:InspectorView].((vm:InspectorViewModel)DataContext).Types}" SelectedItem="{Binding BindValueType, Mode=TwoWay}"/>
+                                    </Border>
+                                    <Border Grid.Column="2">
+                                        <TextBox Text="{Binding Value, Mode=TwoWay}"/>
+                                    </Border>
+                                    <Border Grid.Column="3">
+                                        <Button Name="{Binding Name}" Content="[-]" Click="DeleteProperty"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.Styles>
+                        <Style Selector="Border">
+                            <Setter Property="BorderBrush" Value="AliceBlue"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                        </Style>
+                        <Style Selector="TextBox">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        </Style>
+                    </ItemsControl.Styles>
+                </ItemsControl> -->
+                <Button Content="[+] Add new property" Click="Button_Click"/>
+            </StackPanel>
+            <!-- <StackPanel Orientation="Horizontal" Grid.Row="1"> -->
+                <!-- <Button Content="[+] Add new property" Click="Button_Click"/> -->
+            <!-- </StackPanel> -->
+        </ScrollViewer>
+    </Panel>
+</UserControl>
