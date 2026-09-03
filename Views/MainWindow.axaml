@@ -8,7 +8,8 @@
         x:Class="ItemDatabaser.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ItemDatabaser">
+        Title="ItemDatabaser"
+        WindowStartupLocation="CenterOwner">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,

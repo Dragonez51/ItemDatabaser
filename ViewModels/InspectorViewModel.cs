@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ItemDatabaser.DataStructures;
-using ItemDatabaser.Views;
 
 namespace ItemDatabaser.ViewModels;
 
@@ -15,7 +14,8 @@ public partial class InspectorViewModel : ViewModelBase
     [ObservableProperty] private bool _isTextVisible = true;
     [ObservableProperty] private bool _isPropertiesVisible = false;
 
-    [ObservableProperty] private List<Type>? _types;
+    // [ObservableProperty] private List<Type>? _types;
+    [ObservableProperty] private List<string>? _types;
 
     [ObservableProperty] private TreeNode? _loadedTreeNode;
 
@@ -27,9 +27,24 @@ public partial class InspectorViewModel : ViewModelBase
 
     private void LoadTypes()
     {
-        var frameworkTypes = typeof(Type).Assembly.GetTypes().Where(x => x.IsPrimitive).ToList();
-        frameworkTypes.Add(typeof(String));
-        Types = frameworkTypes;
+        // Types = new List<Type>()
+        // {
+        //     typeof(Int16),
+        //     typeof(int),
+        //     typeof(long),
+        //     typeof(char),
+        //     typeof(string),
+        //     typeof(bool)
+        // };
+        Types = new List<string>()
+        {
+            typeof(Int16).Name,
+            typeof(int).Name,
+            typeof(long).Name,
+            typeof(char).Name,
+            typeof(string).Name,
+            typeof(bool).Name
+        };
     }
 
     public void Load(TreeNode treeNode)
@@ -46,7 +61,9 @@ public partial class InspectorViewModel : ViewModelBase
 
     public void DeleteProperty(string name)
     {
-        foreach(var property in LoadedTreeNode?.Properties)
+        if(LoadedTreeNode is null) return;
+        if(LoadedTreeNode.Properties is null) return;
+        foreach(var property in LoadedTreeNode.Properties)
         {
             if(property.Name.Equals(name))
             {

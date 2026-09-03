@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Xml.Linq;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ItemDatabaser.DataStructures;
@@ -8,14 +9,21 @@ namespace ItemDatabaser.DataStructures;
 // public abstract partial class Property : ObservableObject
 public partial class Property : ObservableObject
 {
+    [ObservableProperty] private IBrush _typeValidation = Brush.Parse("#0f0");
+    [ObservableProperty] private IBrush _valueValidation = Brush.Parse("#0f0");
+
+    // public IBrush TypeValidation { get; set; } = Brush.Parse("#0f0");
+    // public IBrush ValueValidation { get; set; } = Brush.Parse("#0f0");
+
     public string Name { get; set; } = "New Property";
 
     // public abstract object? UntypedValue { get; set; }
     // public abstract Type? UntypedValueType { get; set; }
     [ObservableProperty] private Type _valueType = typeof(Int32);
+    [ObservableProperty] private object _value;
 
-    public object? Value { get; set; }
-    public Type? BindValueType { get => ValueType; set => SetType(value); }
+    public object? BindValue { get => Value; set => SetValue(value); }
+    public string? BindValueType { get => ValueType.Name; set => SetType(value); }
 
     public Property(){}
 
@@ -34,16 +42,34 @@ public partial class Property : ObservableObject
     // public abstract void SetValue(object value);
     // public abstract void SetType(Type type);
 
-    public void SetType(Type type)
+    public void SetType(string typeName)
     {
-        if(type is null) return;
+        var type = Type.GetType("System."+typeName);
+        if(type is null) { InValidateType(); return; }
+        ValidateType();
         ValueType = type;
+
+        // if(Value as ValueType is null){ InValidateValue(); return;}
+    }
+
+    public void SetValue(object value)
+    {
+        var convert = Convert.ChangeType(value, ValueType);
+        // Debug.WriteLine($"[Property] SetValue(value: {value}) => [valueType: {value.GetType()}][ValueType: {ValueType}][value as ValueType: {value as ValueType}]");
+        if(convert is null){ InValidateValue(); return; }
+        ValidateValue();
+        Value = value;
     }
 
     public override string ToString()
     {
         return $"[Property][name: {Name}]";
     }
+
+    private void ValidateType() => TypeValidation = Brush.Parse("#0f0");
+    private void InValidateType() => TypeValidation = Brush.Parse("#f00");
+    private void ValidateValue() => ValueValidation = Brush.Parse("#0f0");
+    private void InValidateValue() => ValueValidation = Brush.Parse("#f00");
 }
 
 // public partial class Property<T> : Property

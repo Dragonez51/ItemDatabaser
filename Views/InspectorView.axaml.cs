@@ -27,6 +27,7 @@ public partial class InspectorView : UserControl
 
     private void DeleteProperty(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
+        Debug.WriteLine("[InspectorView] DeleteProperty() =>");
         (DataContext as InspectorViewModel)?.DeleteProperty((sender as Button).Name);
     }
 }
