@@ -12,5 +12,6 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="Styles/InspectorStyles.axaml"/>
+        <StyleInclude Source="Styles/GlobalStyles.axaml"/>
     </Application.Styles>
 </Application>

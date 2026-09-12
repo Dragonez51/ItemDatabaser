@@ -4,13 +4,22 @@
              x:Class="ItemDatabaser.Views.StructureView"
              x:DataType="vm:StructureViewModel">
   <Grid RowDefinitions="9*, 1*">
-    <TreeView ItemsSource="{Binding Nodes}" SelectionChanged="TreeView_SelectionChanged" SelectionMode="Single" Grid.Row="0">
-      <TreeView.ItemTemplate>
-        <TreeDataTemplate ItemsSource="{Binding SubNodes}">
-          <TextBlock Text="{Binding Name}"/>
-        </TreeDataTemplate>
-      </TreeView.ItemTemplate>
-    </TreeView>
+    <StackPanel>
+      <Border Classes="Base">
+        <TextBlock Text="Categories:" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+      </Border>
+      <Border Classes="Base">
+          <ScrollViewer>
+            <TreeView ItemsSource="{Binding Nodes}" SelectionChanged="TreeView_SelectionChanged" SelectionMode="Single" Grid.Row="0">
+              <TreeView.ItemTemplate>
+                <TreeDataTemplate ItemsSource="{Binding SubNodes}">
+                  <TextBlock Text="{Binding Name}"/>
+                </TreeDataTemplate>
+              </TreeView.ItemTemplate>
+            </TreeView>
+          </ScrollViewer>
+      </Border>
+    </StackPanel>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1">
       <Button Content="[+] Add new Node" Click="Button_Click"/>
     </StackPanel>

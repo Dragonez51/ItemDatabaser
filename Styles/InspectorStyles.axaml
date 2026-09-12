@@ -1,24 +1,22 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         >
-  <Design.PreviewWith>
-    <Border Padding="20" Width="800">
-      <!-- Add Controls for Previewer Here -->
-       <Grid Classes="InspectorGrid" ColumnDefinitions="2*, 2*, 2*, *" RowDefinitions="*,*">
-          <TextBlock Classes="InspectorHeader" Grid.Column="0" Text="Name"/>
-          <TextBlock Classes="InspectorHeader" Grid.Column="1" Text="Type"/>
-          <TextBlock Classes="InspectorHeader" Grid.Column="2" Text="Value"/>
-          <TextBlock Classes="InspectorHeader" Grid.Column="3" Text="Remove"/>
+   <Design.PreviewWith>
+      <Border Padding="20" Width="800">
+         <Grid Classes="InspectorGrid" ColumnDefinitions="2*, 2*, 2*, *" RowDefinitions="*,*">
+            <TextBlock Classes="InspectorHeader" Grid.Column="0" Text="Name"/>
+            <TextBlock Classes="InspectorHeader" Grid.Column="1" Text="Type"/>
+            <TextBlock Classes="InspectorHeader" Grid.Column="2" Text="Value"/>
+            <TextBlock Classes="InspectorHeader" Grid.Column="3" Text="Remove"/>
 
-          <TextBox  Grid.Column="0" Grid.Row="1" Text="Name"/>
-          <ComboBox Grid.Column="1" Grid.Row="1" />
-          <TextBox  Grid.Column="2" Grid.Row="1" Text="Value"/>
-          <Button   Grid.Column="3" Grid.Row="1" Content="[x]"/>
-      </Grid>
-    </Border>
-  </Design.PreviewWith>
+            <TextBox  Grid.Column="0" Grid.Row="1" Classes="InspectorTextBox" Text="Name"/>
+            <ComboBox Grid.Column="1" Grid.Row="1" Classes="TypeSelector" />
+            <TextBox  Grid.Column="2" Grid.Row="1" Classes="InspectorTextBox" Text="Value"/>
+            <Button   Grid.Column="3" Grid.Row="1" Classes="ButtonDelete" Content="x"/>
+         </Grid>
+      </Border>
+   </Design.PreviewWith>
 
-  <!-- Add Styles Here -->
    <Style Selector="TextBlock.InspectorHeader">
       <Setter Property="HorizontalAlignment" Value="Center"/>
       <Setter Property="VerticalAlignment" Value="Center"/>
@@ -56,6 +54,7 @@
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
       <Setter Property="VerticalAlignment" Value="Stretch"/>
       <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
    </Style>
    
    <Style Selector="ComboBox.TypeSelector">

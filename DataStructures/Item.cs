@@ -17,7 +17,6 @@ public class Item
     {
         foreach(Property property in Properties)
         {
-            // var conversion = property as Property<object>;
             if(property is null) throw new System.Exception("[Item] SetValues() => conversion is null!");
             if (property.Name.Equals(name))
             {
@@ -35,6 +34,7 @@ public class Item
         foreach(Property lastProperty in lastProperties)
         {
             if(lastProperty is null) throw new System.Exception("[Item] SetProperties() => conversion is null!");
+            if(lastProperty.Value is null) throw new System.Exception("[Item] SetProperties() => lastProperty.Value is null!");
             SetValue(lastProperty.Name, lastProperty.Value);
         }
     }

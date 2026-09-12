@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ds="using:ItemDatabaser.DataStructures"
         d:DesignWidth="400"
         xmlns:v="clr-namespace:ItemDatabaser.Views"
         xmlns:vm="clr-namespace:ItemDatabaser.ViewModels"
@@ -44,111 +45,44 @@
                                                     Text="{Binding Name}"/>
                                     </Border>
                                     <Border Classes="GridCellBorder" Grid.Column="1">
-                                        <ComboBox   Classes="TypeSelector"
+                                        <ComboBox   Classes="TypeSelector Validate"
+                                                    Name="{Binding Name}"
                                                     ItemsSource="{Binding $parent[v:InspectorView].((vm:InspectorViewModel)DataContext).Types}" 
                                                     SelectedItem="{Binding BindValueType}"/>
                                     </Border>
                                     <Border Classes="GridCellBorder" Grid.Column="2">
-                                        <TextBox    Classes="InspectorTextBox"
+                                        <TextBox    Classes="InspectorTextBox Validate"
                                                     Text="{Binding BindValue}"/>
                                     </Border>
                                     <Border Classes="GridCellBorder" Grid.Column="3">
                                         <Button     Classes="ButtonDelete"
                                                     Name="{Binding Name}"
                                                     Click="DeleteProperty"
-                                                    Content="x"/>
+                                                    >
+                                            <Image Source="avares://ItemDatabaser/Assets/Img/Trashcan.png"/>
+                                        </Button>
                                     </Border>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
+                    <ItemsControl.Styles>
+                        <Style Selector="TextBox.Validate" x:DataType="ds:Property">
+                            <Setter Property="BorderBrush" Value="{Binding Validation}"/>
+                            
+                            <Style Selector="^:focus /template/ Border" x:DataType="ds:Property">
+                                <Setter Property="BorderBrush" Value="{Binding Validation}"/>
+                            </Style>
+                        </Style>
+                        <Style Selector="ComboBox.Validate" x:DataType="ds:Property">
+                            <Setter Property="BorderBrush" Value="{Binding Validation}"/>
+                            
+                            <Style Selector="^:focus /template/ Border" x:DataType="ds:Property">
+                                <Setter Property="BorderBrush" Value="{Binding Validation}"/>
+                            </Style>
+                        </Style>
+                    </ItemsControl.Styles>
                 </ItemsControl>
-                <!-- <TableView ItemsSource="{Binding LoadedTreeNode.Properties}">
-                    <TableView.Columns>
-                        <TableViewColumn Header="Name" Name="NameCol" Width="2*" Binding="{Binding Name}">
-                            <TableViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox    Text="{Binding Name}"
-                                                Classes="TableInput"
-                                                HorizontalAlignment="Right"
-                                                HorizontalContentAlignment="Center"
-                                                />
-                                </DataTemplate>
-                            </TableViewColumn.CellTemplate>
-                        </TableViewColumn>
-                        <TableViewColumn Header="Type" Width="2*">
-                            <TableViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ComboBox   ItemsSource="{Binding $parent[v:InspectorView].((vm:InspectorViewModel)DataContext).Types}"
-                                                SelectedItem="{Binding BindValueType}" 
-                                                BorderBrush="{Binding TypeValidation}" 
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
-                                                HorizontalContentAlignment="Center"
-                                                VerticalContentAlignment="Center"
-                                                />
-                                </DataTemplate>
-                            </TableViewColumn.CellTemplate>
-                        </TableViewColumn>
-                        <TableViewColumn Header="Value" Width="2*">
-                            <TableViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox    Text="{Binding BindValue}" 
-                                                BorderBrush="{Binding ValueValidation}" 
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Stretch"
-                                                HorizontalContentAlignment="Center"
-                                                VerticalContentAlignment="Center"
-                                                />
-                                </DataTemplate>
-                            </TableViewColumn.CellTemplate>
-                        </TableViewColumn>
-                        <TableViewColumn Header="Remove" Width="50">
-                            <TableViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Name="{Binding Name}" Content="x" FontSize="18" FontWeight="Bold" Foreground="#f00" Click="DeleteProperty"/>
-                                </DataTemplate>
-                            </TableViewColumn.CellTemplate>
-                        </TableViewColumn>
-                    </TableView.Columns>
-                    <TableView.Styles>
-                        <Style Selector="TableView">
-                            <Setter Property="BorderBrush" Value="#f00"/>
-                            <Setter Property="BorderThickness" Value="3"/>
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="CanUserResizeColumns" Value="False"/>
-                        </Style>
-                        <Style Selector="TableViewColumnHeader">
-                            <Setter Property="Background" Value="#f00"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Margin" Value="0"/>
-                        </Style>
-                        <Style Selector="TableViewCell">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-                            <Setter Property="BorderBrush" Value="#f00"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="Background" Value="#00f"/>
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Margin" Value="0"/>
-                        </Style>
-                        <Style Selector="TableViewColumnHeadersPresenter:pointerover">
-                            <Setter Property="Background" Value="#f00"/>
-                            <Setter Property="Margin" Value="0"/>
-                        </Style>
-                        
-                    </TableView.Styles>
-                    <TableView.ItemContainerTheme>
-                        <ControlTheme TargetType="ContentPresenter">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            <Setter Property="Background" Value="#0f0"/>
-                        </ControlTheme>
-                    </TableView.ItemContainerTheme>
-                </TableView> -->
                 <Button Content="[+] Add new property" Click="Button_Click"/>
             </StackPanel>
         </ScrollViewer>

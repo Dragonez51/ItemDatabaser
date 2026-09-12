@@ -1,22 +1,13 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
-using Avalonia.LogicalTree;
-using Avalonia.VisualTree;
 using ItemDatabaser.ViewModels;
 
 namespace ItemDatabaser.Views;
 
 public partial class InspectorView : UserControl
 {
-
-    private static InspectorView _self;
-
     public InspectorView()
     {
-        _self = this;
         InitializeComponent();
     }
 
@@ -27,7 +18,9 @@ public partial class InspectorView : UserControl
 
     private void DeleteProperty(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        Debug.WriteLine("[InspectorView] DeleteProperty() =>");
-        (DataContext as InspectorViewModel)?.DeleteProperty((sender as Button).Name);
+        var senderButton = sender as Button;
+        if(senderButton is null) return; 
+        if(senderButton.Name is null) return;
+        (DataContext as InspectorViewModel)?.DeleteProperty(senderButton.Name);
     }
 }
