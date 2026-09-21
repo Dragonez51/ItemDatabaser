@@ -13,7 +13,18 @@ public partial class InspectorView : UserControl
 
     private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        (DataContext as InspectorViewModel)?.AddProperty();
+        var button = sender as Button;
+        if(button is null) return;
+
+        switch (button.Name)
+        {
+            case "Property":
+                (DataContext as InspectorViewModel)?.AddProperty();
+                break;
+            case "Item":
+                (DataContext as InspectorViewModel)?.AddItem();
+                break;
+        }
     }
 
     private void DeleteProperty(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

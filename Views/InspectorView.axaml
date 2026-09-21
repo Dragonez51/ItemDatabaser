@@ -10,81 +10,16 @@
         >
     <Panel>
         <TextBlock Text="Select a node!" IsVisible="{Binding IsTextVisible}" HorizontalAlignment="Center"/>
-        <ScrollViewer>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsPropertiesVisible}">
-                <Border BorderBrush="AliceBlue" BorderThickness="3">
-                    <TextBox Text="{Binding LoadedTreeNode.Name}" TextAlignment="Center" FontSize="28" FontWeight="Bold"/>
-                </Border>
-                <Border Classes="GridHeadersBorder">
-                    <Grid RowDefinitions="*">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="4*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                            <TextBlock Classes="InspectorHeader" Grid.Column="0" Text="Name"/>
-                            <TextBlock Classes="InspectorHeader" Grid.Column="1" Text="Type"/>
-                            <TextBlock Classes="InspectorHeader" Grid.Column="2" Text="Value"/>
-                            <TextBlock Classes="InspectorHeader" Grid.Column="3" Text="Remove"/>
-                    </Grid>
-                </Border>
-                <ItemsControl ItemsSource="{Binding LoadedTreeNode.Properties}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Classes="GridItemsBorder">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Classes="GridCellBorder" Grid.Column="0">
-                                        <TextBox    Classes="InspectorTextBox"
-                                                    Text="{Binding Name}"/>
-                                    </Border>
-                                    <Border Classes="GridCellBorder" Grid.Column="1">
-                                        <ComboBox   Classes="TypeSelector Validate"
-                                                    Name="{Binding Name}"
-                                                    ItemsSource="{Binding $parent[v:InspectorView].((vm:InspectorViewModel)DataContext).Types}" 
-                                                    SelectedItem="{Binding BindValueType}"/>
-                                    </Border>
-                                    <Border Classes="GridCellBorder" Grid.Column="2">
-                                        <TextBox    Classes="InspectorTextBox Validate"
-                                                    Text="{Binding BindValue}"/>
-                                    </Border>
-                                    <Border Classes="GridCellBorder" Grid.Column="3">
-                                        <Button     Classes="ButtonDelete"
-                                                    Name="{Binding Name}"
-                                                    Click="DeleteProperty"
-                                                    >
-                                            <Image Source="avares://ItemDatabaser/Assets/Img/Trashcan.png"/>
-                                        </Button>
-                                    </Border>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.Styles>
-                        <Style Selector="TextBox.Validate" x:DataType="ds:Property">
-                            <Setter Property="BorderBrush" Value="{Binding Validation}"/>
-                            
-                            <Style Selector="^:focus /template/ Border" x:DataType="ds:Property">
-                                <Setter Property="BorderBrush" Value="{Binding Validation}"/>
-                            </Style>
-                        </Style>
-                        <Style Selector="ComboBox.Validate" x:DataType="ds:Property">
-                            <Setter Property="BorderBrush" Value="{Binding Validation}"/>
-                            
-                            <Style Selector="^:focus /template/ Border" x:DataType="ds:Property">
-                                <Setter Property="BorderBrush" Value="{Binding Validation}"/>
-                            </Style>
-                        </Style>
-                    </ItemsControl.Styles>
-                </ItemsControl>
-                <Button Content="[+] Add new property" Click="Button_Click"/>
-            </StackPanel>
+            <ScrollViewer>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsPropertiesVisible}">
+                    <Border Classes="Base">
+                        <TextBox Text="{Binding LoadedCategory.Name, Mode=TwoWay}" TextAlignment="Center" FontSize="28" FontWeight="Bold"/>
+                    </Border>
+                    <Border Classes="Base">
+                        <ContentControl Content="{Binding DataGrid}"/>
+                    </Border>
+                    <Button Name="Item" Content="[+] Add new Item" Click="Button_Click"/>
+                </StackPanel>
         </ScrollViewer>
     </Panel>
 </UserControl>

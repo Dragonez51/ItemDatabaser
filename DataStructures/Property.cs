@@ -9,6 +9,8 @@ public partial class Property : ObservableObject
 {
     [ObservableProperty] private IBrush _validation = Brush.Parse("#0f0");
 
+    public int Column { get; set; } = 1; 
+
     public string Name { get; set; } = "New Property";
 
     [ObservableProperty] private Type _valueType = typeof(Int32);

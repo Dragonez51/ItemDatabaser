@@ -1,65 +1,84 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ds="using:ItemDatabaser.DataStructures"
         >
    <Design.PreviewWith>
       <Border Padding="20" Width="800">
-         <Grid Classes="InspectorGrid" ColumnDefinitions="2*, 2*, 2*, *" RowDefinitions="*,*">
-            <TextBlock Classes="InspectorHeader" Grid.Column="0" Text="Name"/>
-            <TextBlock Classes="InspectorHeader" Grid.Column="1" Text="Type"/>
-            <TextBlock Classes="InspectorHeader" Grid.Column="2" Text="Value"/>
-            <TextBlock Classes="InspectorHeader" Grid.Column="3" Text="Remove"/>
+         <Grid Classes="DataGrid" ColumnDefinitions="2*, 2*, 2*, *" RowDefinitions="*,*">
+            <TextBlock Classes="Header" Grid.Column="0" Text="Name"/>
+            <TextBlock Classes="Header" Grid.Column="1" Text="Type"/>
+            <TextBlock Classes="Header" Grid.Column="2" Text="Value"/>
+            <TextBlock Classes="Header" Grid.Column="3" Text="Remove"/>
 
-            <TextBox  Grid.Column="0" Grid.Row="1" Classes="InspectorTextBox" Text="Name"/>
-            <ComboBox Grid.Column="1" Grid.Row="1" Classes="TypeSelector" />
-            <TextBox  Grid.Column="2" Grid.Row="1" Classes="InspectorTextBox" Text="Value"/>
-            <Button   Grid.Column="3" Grid.Row="1" Classes="ButtonDelete" Content="x"/>
+            <TextBox  Grid.Column="0" Grid.Row="1" Classes="NameBox" Text="Name"/>
+            <ComboBox Grid.Column="1" Grid.Row="1" Classes="TypeBox" />
+            <TextBox  Grid.Column="2" Grid.Row="1" Classes="ValueBox" Text="Value"/>
+            <Button   Grid.Column="3" Grid.Row="1" Classes="Delete" Content="x"/>
          </Grid>
       </Border>
    </Design.PreviewWith>
 
-   <Style Selector="TextBlock.InspectorHeader">
+   <Style Selector="Grid.DataGrid">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <!-- <Setter Property="HorizontalAlignment" Value="Stretch"/> -->
+   </Style>
+
+   <Style Selector="TextBlock.Header">
       <Setter Property="HorizontalAlignment" Value="Center"/>
       <Setter Property="VerticalAlignment" Value="Center"/>
       <Setter Property="TextAlignment" Value="Center"/>
-      <Setter Property="FontSize" Value="20"/>
+      <Setter Property="FontSize" Value="16"/>
       <Setter Property="FontWeight" Value="Bold"/>
    </Style>
 
-   <Style Selector="Border.GridHeadersBorder">
-      <Setter Property="BorderBrush" Value="#f00"/>
-      <Setter Property="BorderThickness" Value="2"/>
+   <Style Selector="TextBox.NameBox">
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="TextAlignment" Value="Center"/>
+      <Setter Property="FontSize" Value="14"/>
       <!-- <Setter Property="" Value=""/> -->
    </Style>
-   <Style Selector="Border.GridItemsBorder">
-      <!-- <Setter Property="BorderBrush" Value="#f00"/> -->
-      <!-- <Setter Property="BorderThickness" Value="2"/> -->
-      <!-- <Setter Property="" Value=""/> -->
-   </Style>
-   <Style Selector="Border.GridCellBorder">
-      <Setter Property="BorderBrush" Value="#f00"/>
-      <Setter Property="BorderThickness" Value="2"/>
-      <Setter Property="Padding" Value="5"/>
-      <!-- <Setter Property="" Value=""/> -->
-   </Style>
-
-   <Style Selector="Button.ButtonDelete">
-      <Setter Property="HorizontalAlignment" Value="Center"/>
-      <Setter Property="VerticalAlignment" Value="Center"/>
-      <Setter Property="Foreground" Value="#f00"/>
-      <Setter Property="FontSize" Value="18"/>
-      <Setter Property="FontWeight" Value="ExtraBold"/>
-   </Style>
-
-   <Style Selector="TextBox.InspectorTextBox">
+   <Style Selector="TextBox.ValueBox">
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
       <Setter Property="VerticalAlignment" Value="Stretch"/>
       <Setter Property="HorizontalContentAlignment" Value="Center"/>
       <Setter Property="VerticalContentAlignment" Value="Center"/>
    </Style>
-   
-   <Style Selector="ComboBox.TypeSelector">
+   <Style Selector="TextBox.Validate">
+      <Setter Property="BorderBrush" Value="{Binding $self.((ds:Property)DataContext).Validation}"/>
+      <Style Selector="^:focus /template/ Border">
+         <Setter Property="BorderBrush" Value="{Binding $self.((ds:Property)DataContext).Validation}"/>
+      </Style>
+   </Style>
+
+   <Style Selector="ComboBox.TypeBox">
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
       <Setter Property="VerticalAlignment" Value="Stretch"/>
       <Setter Property="HorizontalContentAlignment" Value="Center"/>
+   </Style>
+
+   <Style Selector="StackPanel.HeaderStackPanel">
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+   </Style>
+
+   <Style Selector="Button.Delete">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+   </Style>
+   <Style Selector="Button.Add">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+   </Style>
+   
+   <Style Selector="Image.ButtonImage">
+      <Setter Property="Width" Value="16"/>
+      <Setter Property="Height" Value="16"/>
+   </Style>
+
+   <Style Selector="Border.HeaderBorder">
+      <Setter Property="BorderBrush" Value="Red"/>
+      <Setter Property="BorderThickness" Value="3"/>
+      <!-- <Setter Property="CornerRadius" Value="3"/> -->
    </Style>
 </Styles>

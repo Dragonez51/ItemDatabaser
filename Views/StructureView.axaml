@@ -6,13 +6,13 @@
   <Grid RowDefinitions="9*, 1*">
     <StackPanel>
       <Border Classes="Base">
-        <TextBlock Text="Categories:" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="Categories:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
       </Border>
       <Border Classes="Base">
           <ScrollViewer>
-            <TreeView ItemsSource="{Binding Nodes}" SelectionChanged="TreeView_SelectionChanged" SelectionMode="Single" Grid.Row="0">
+            <TreeView ItemsSource="{Binding CategoryNodes}" SelectionChanged="TreeView_SelectionChanged" SelectionMode="Single" Grid.Row="0">
               <TreeView.ItemTemplate>
-                <TreeDataTemplate ItemsSource="{Binding SubNodes}">
+                <TreeDataTemplate ItemsSource="{Binding SubCategories}">
                   <TextBlock Text="{Binding Name}"/>
                 </TreeDataTemplate>
               </TreeView.ItemTemplate>
