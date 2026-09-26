@@ -2,21 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ds="using:ItemDatabaser.DataStructures"
         >
-   <Design.PreviewWith>
-      <Border Padding="20" Width="800">
-         <Grid Classes="DataGrid" ColumnDefinitions="2*, 2*, 2*, *" RowDefinitions="*,*">
-            <TextBlock Classes="Header" Grid.Column="0" Text="Name"/>
-            <TextBlock Classes="Header" Grid.Column="1" Text="Type"/>
-            <TextBlock Classes="Header" Grid.Column="2" Text="Value"/>
-            <TextBlock Classes="Header" Grid.Column="3" Text="Remove"/>
-
-            <TextBox  Grid.Column="0" Grid.Row="1" Classes="NameBox" Text="Name"/>
-            <ComboBox Grid.Column="1" Grid.Row="1" Classes="TypeBox" />
-            <TextBox  Grid.Column="2" Grid.Row="1" Classes="ValueBox" Text="Value"/>
-            <Button   Grid.Column="3" Grid.Row="1" Classes="Delete" Content="x"/>
-         </Grid>
-      </Border>
-   </Design.PreviewWith>
 
    <Style Selector="Grid.DataGrid">
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -29,6 +14,7 @@
       <Setter Property="TextAlignment" Value="Center"/>
       <Setter Property="FontSize" Value="16"/>
       <Setter Property="FontWeight" Value="Bold"/>
+      <Setter Property="MinWidth" Value="100"/>
    </Style>
 
    <Style Selector="TextBox.NameBox">
@@ -36,7 +22,10 @@
       <Setter Property="VerticalAlignment" Value="Stretch"/>
       <Setter Property="TextAlignment" Value="Center"/>
       <Setter Property="FontSize" Value="14"/>
-      <!-- <Setter Property="" Value=""/> -->
+      <Setter Property="BorderBrush" Value="#ff00afff"/>
+      <Style Selector="^:focus /template/ Border">
+         <Setter Property="BorderBrush" Value="#ff00afff"/>
+      </Style>
    </Style>
    <Style Selector="TextBox.ValueBox">
       <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -77,7 +66,7 @@
    </Style>
 
    <Style Selector="Border.HeaderBorder">
-      <Setter Property="BorderBrush" Value="Red"/>
+      <Setter Property="BorderBrush" Value="#ff00afff"/>
       <Setter Property="BorderThickness" Value="3"/>
       <!-- <Setter Property="CornerRadius" Value="3"/> -->
    </Style>

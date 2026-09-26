@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
@@ -17,13 +15,12 @@ public partial class InspectorViewModel : ViewModelBase
     [ObservableProperty] private bool _isTextVisible = true;
     [ObservableProperty] private bool _isPropertiesVisible = false;
 
-    [ObservableProperty] private List<string>? _types;
+    [ObservableProperty] private List<string>? _types; // list of types to choose from typeBox
 
-    [ObservableProperty] private TreeNode? _loadedTreeNode;
-    [ObservableProperty] private Category? _loadedCategory;
+    [ObservableProperty] private Category? _loadedCategory; // selected category of items
 
-    [ObservableProperty] private Grid? _dataGrid;
-    [ObservableProperty] private Item? _drawnItem;
+    [ObservableProperty] private Grid? _dataGrid; // Avalonia object to bind visuals
+    [ObservableProperty] private Item? _drawnItem; // idk?
 
     private string? _selectedPropertyName;
 
@@ -81,7 +78,7 @@ public partial class InspectorViewModel : ViewModelBase
             border.Classes.Add("HeaderBorder");
             border[Grid.ColumnProperty] = columnIndexer;
 
-            StackPanel sp = new StackPanel(){ Orientation = Avalonia.Layout.Orientation.Horizontal };
+            StackPanel sp = new StackPanel(){ Orientation = Avalonia.Layout.Orientation.Vertical };
             sp.Classes.Add("HeaderStackPanel");
 
             TextBox HeaderName = new TextBox(){ Text = property.Name };
@@ -130,8 +127,7 @@ public partial class InspectorViewModel : ViewModelBase
 
         GenerateColumnsAndHeaders();
 
-        DataGrid.RowDefinitions = new();
-        DataGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
+        DataGrid.RowDefinitions = new(){new RowDefinition(GridLength.Star)};
 
         int rowIndex = 1;
         foreach(var item in LoadedCategory.Items)
@@ -190,21 +186,10 @@ public partial class InspectorViewModel : ViewModelBase
         }
     }
 
-    public void Load(TreeNode treeNode)
-    {
-        LoadedTreeNode = treeNode;
-        ShowProperties();
-    }
-
     private void ShowProperties()
     {
         IsTextVisible = false;
         IsPropertiesVisible = true;
-    }
-
-    public void AddProperty()
-    {
-        LoadedTreeNode?.Properties.Add(new Property());
     }
 
     public void AddItem()
@@ -213,30 +198,11 @@ public partial class InspectorViewModel : ViewModelBase
         GenerateData();
     }
 
-    public void DeleteProperty(string name)
-    {
-        if(LoadedTreeNode is null) return;
-        if(LoadedTreeNode.Properties is null) return;
-        foreach(var property in LoadedTreeNode.Properties)
-        {
-            if(property.Name.Equals(name))
-            {
-                LoadedTreeNode.Properties.Remove(property);
-                return;
-            }
-        }
-    }
-
     public void DeleteItem(object? sender, RoutedEventArgs e)
     {
-        Debug.WriteLine($"[InspectorViewModel] DeleteItem() => [Button.Name: {(sender as Button)?.Name}]");
-        // Grid? dataGrid = (sender as Button)?.Parent as Grid;
-        // var item = dataGrid.Children;
-        // Debug.WriteLine($"[InspectorViewModel] DeleteItem() => [Button.Parent: {dataGrid.Children.Select(x => x[Grid.RowProperty])}]");
         var button = sender as Button;
         if(button is null) return;
         if(button.Name is null) return;
-        // Debug.WriteLine("$");
         DeleteItem(button.Name);
     }
     public void DeleteItem(string id)
@@ -253,8 +219,8 @@ public partial class InspectorViewModel : ViewModelBase
         }
     }
 
-    public void AddProp(object? sender, RoutedEventArgs e) => AddCategoryProperty();
-    public void AddCategoryProperty()
+    public void AddProp(object? sender, RoutedEventArgs e) => AddProp();
+    public void AddProp()
     {
         LoadedCategory?.AddProperty();
         GenerateData();

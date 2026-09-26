@@ -5,11 +5,13 @@ FIXED    - Type update updates correctly but for new items;
 FIXED    - Delete item button does not work;
 FIXED    - Add new property does not validate for new value text boxes of existing items;
 ADD      - Delete button for properties;
+BUG      - If there are two properties of the same name, the first from left will be updated. (Distinguish them)
 
 REMAKE:
 RMK  OPT - Data structure of categories-items should be: Category[TypeProp | Items], Item[ValueProp] in order not to have too many type variables;
 
 ROADMAP:
+ADD      - InspectorView DataGrid column manipulation (fuck)
 ADD      - functionality for AddCategory button;
 ADD      - SubCategories;
 ADD      - Export handling (JSON / MyDS);       (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)

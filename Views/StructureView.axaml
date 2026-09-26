@@ -21,7 +21,7 @@
       </Border>
     </StackPanel>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1">
-      <Button Content="[+] Add new Node" Click="Button_Click"/>
+      <Button Content="[+] Add new Category" Click="AddCategory_Click"/>
     </StackPanel>
   </Grid>
 </UserControl>

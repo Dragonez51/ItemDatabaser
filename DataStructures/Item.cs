@@ -7,9 +7,7 @@ public partial class Item : ObservableObject
 {
     private static int _itemId = 1;
 
-    // [ObservableProperty] private ObservableCollection<Property>? _properties;
     public ObservableCollection<Property>? Properties  { get; private set; }
-    // public string   Name    { get; private set; } = "New Item";
     [ObservableProperty] private string _name = "New Item";
 
     public int ItemID { get; private set; }
@@ -55,33 +53,6 @@ public partial class Item : ObservableObject
             Properties.Add(newProp);
         }
         return;
-    }
-
-    // TODO: this function binds every item properties to the same one (prob last)
-    public void UpdateProperties(ObservableCollection<Property> updateProperties)
-    {
-        if(Properties is null) return;
-
-        var lastProperties = new ObservableCollection<Property>(Properties);
-
-        Properties = new ();
-        foreach(var updateProp in updateProperties)
-        {
-            Property newProp = new Property();
-            newProp.Name = updateProp.Name;
-            newProp.SetType(updateProp.ValueType.Name);
-            newProp.SetValue(updateProp.Value);
-
-            Properties.Add(newProp);
-
-            foreach(var lastProp in lastProperties)
-            {
-                if (!lastProp.Name.Equals(newProp.Name)) continue;
-                
-                newProp.SetValue(lastProp.Value);
-                break;
-            }
-        }
     }
 
     public void AddProperty()

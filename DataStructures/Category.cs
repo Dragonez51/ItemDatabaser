@@ -6,8 +6,8 @@ namespace ItemDatabaser.DataStructures;
 
 public partial class Category : ObservableObject
 {
-    public ObservableCollection<Property> Properties { get; private set; } = new ();
-    public ObservableCollection<Item>   Items      { get; private set; } = new ();
+    public ObservableCollection<Property> Properties    { get; private set; } = new ();
+    public ObservableCollection<Item>     Items         { get; private set; } = new ();
 
     public ObservableCollection<Category> SubCategories { get; private set; } = new ();
 
@@ -48,8 +48,6 @@ public partial class Category : ObservableObject
 
     public void UpdateTypes(string propName, string typeName)
     {
-        // Debug.WriteLine($"[Category] UpdateTypes(propName: {propName}, typeName: {typeName}) =>");
-
         // set type for category properties
         foreach(var prop in Properties)
         {

@@ -9,8 +9,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public static void LoadInspector(object data)
     {
-        var treeNode = data as TreeNode;
-        if(!(treeNode is null)) Inspector.Load(treeNode);
         var category = data as Category;
         if(!(category is null)) Inspector.Load(category);
     }

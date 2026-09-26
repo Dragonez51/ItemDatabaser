@@ -10,16 +10,16 @@
         >
     <Panel>
         <TextBlock Text="Select a node!" IsVisible="{Binding IsTextVisible}" HorizontalAlignment="Center"/>
-            <ScrollViewer>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsPropertiesVisible}">
-                    <Border Classes="Base">
-                        <TextBox Text="{Binding LoadedCategory.Name, Mode=TwoWay}" TextAlignment="Center" FontSize="28" FontWeight="Bold"/>
-                    </Border>
-                    <Border Classes="Base">
-                        <ContentControl Content="{Binding DataGrid}"/>
-                    </Border>
-                    <Button Name="Item" Content="[+] Add new Item" Click="Button_Click"/>
-                </StackPanel>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsPropertiesVisible}">
+                <Border Classes="Base">
+                    <TextBox Text="{Binding LoadedCategory.Name, Mode=TwoWay}" TextAlignment="Center" FontSize="20" FontWeight="Bold"/>
+                </Border>
+                <Border Classes="Base">
+                    <ContentControl Content="{Binding DataGrid}"/>
+                </Border>
+                <Button Name="Item" Content="[+] Add new Item" Click="AddItem_Click"/>
+            </StackPanel>
         </ScrollViewer>
     </Panel>
 </UserControl>
