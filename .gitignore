@@ -6,3 +6,6 @@ bin/
 
 #Build
 obj/
+
+#Solution (builds with every run)
+ItemDatabaser.sln

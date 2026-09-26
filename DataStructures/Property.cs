@@ -39,6 +39,7 @@ public partial class Property : ObservableObject
         if(type is null) return;
         ValueType = type;
         Validate();
+        // Debug.WriteLine($"[Property] SetType() => [Type: {ValueType}][typeName: {typeName}][Value: {Value}]");
     }
 
     public void SetValue(object? value)
@@ -72,6 +73,6 @@ public partial class Property : ObservableObject
 
     public override string ToString()
     {
-        return $"[Property][name: {Name}][type: {typeof(ValueType)}][value: {Value}]";
+        return $"[Property][name: {Name}][type: {ValueType.Name}][value: {Value}]";
     }
 }

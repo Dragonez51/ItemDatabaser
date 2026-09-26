@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
@@ -22,6 +24,8 @@ public partial class InspectorViewModel : ViewModelBase
 
     [ObservableProperty] private Grid? _dataGrid;
     [ObservableProperty] private Item? _drawnItem;
+
+    private string? _selectedPropertyName;
 
     public InspectorViewModel()
     {
@@ -81,6 +85,8 @@ public partial class InspectorViewModel : ViewModelBase
             sp.Classes.Add("HeaderStackPanel");
 
             TextBox HeaderName = new TextBox(){ Text = property.Name };
+            HeaderName.AddHandler(TextBox.TextChangedEvent, HeaderBox_TextChanged);
+            HeaderName.AddHandler(TextBox.GotFocusEvent, HeaderBox_GotFocus);
             HeaderName.Classes.Add("HeaderBox");
 
             sp.Children.Add(HeaderName);
@@ -115,6 +121,8 @@ public partial class InspectorViewModel : ViewModelBase
 
     private void GenerateData()
     {
+        _selectedPropertyName = null;
+
         if(LoadedCategory is null) return;
         if(DataGrid is null) return;
 
@@ -170,6 +178,7 @@ public partial class InspectorViewModel : ViewModelBase
             Delete.AddHandler(Button.ClickEvent, DeleteItem);
             Delete[Grid.ColumnProperty] = propColumnIndex;
             Delete[Grid.RowProperty] = rowIndex;
+            Delete.Bind(Button.NameProperty, new ReflectionBinding(nameof(item.ItemID)){ Source = item });
             var deleteImg = new Image(){ Source = new Bitmap(AssetLoader.Open(new Uri("avares://ItemDatabaser/Assets/Img/Trashcan.png"))) };
             deleteImg.Classes.Add("ButtonImage");
             Delete.Content = deleteImg;
@@ -220,20 +229,26 @@ public partial class InspectorViewModel : ViewModelBase
 
     public void DeleteItem(object? sender, RoutedEventArgs e)
     {
+        Debug.WriteLine($"[InspectorViewModel] DeleteItem() => [Button.Name: {(sender as Button)?.Name}]");
+        // Grid? dataGrid = (sender as Button)?.Parent as Grid;
+        // var item = dataGrid.Children;
+        // Debug.WriteLine($"[InspectorViewModel] DeleteItem() => [Button.Parent: {dataGrid.Children.Select(x => x[Grid.RowProperty])}]");
         var button = sender as Button;
         if(button is null) return;
         if(button.Name is null) return;
+        // Debug.WriteLine("$");
         DeleteItem(button.Name);
     }
-    public void DeleteItem(string name)
+    public void DeleteItem(string id)
     {
         if(LoadedCategory is null) return;
 
         foreach(var item in LoadedCategory.Items)
         {
-            if(!item.Name.Equals(name)) continue;
+            if(item.ItemID != Int32.Parse(id)) continue;
 
             LoadedCategory.Items.Remove(item);
+            GenerateData();
             return;
         }
     }
@@ -247,6 +262,50 @@ public partial class InspectorViewModel : ViewModelBase
 
     private void TypeBox_TypeChanged(object? sender, SelectionChangedEventArgs e)
     {
-        LoadedCategory?.UpdateItems();
+        // Debug.WriteLine("[InspectorViewModel] TypeBox_TypeChanged() => ");
+        // Debug.WriteLine("");
+        var senderTypeBox = sender as ComboBox;
+        if(senderTypeBox is null) return;
+        if(senderTypeBox.SelectedItem is null) return;
+        string typeName = (string)senderTypeBox.SelectedItem;
+        
+        var sp = senderTypeBox.Parent as StackPanel;
+        if(sp is null) return;
+
+        var propHeader = sp.Children[0] as TextBox;
+        if(propHeader is null) return;
+
+
+        // Debug.WriteLine($"[InspectorViewModel] TypeBox_TypeChanged() => Successfully got property name: {propHeader.Text}"); 
+
+        // LoadedCategory?.UpdateItems();
+        if(propHeader.Text is null) return;
+        if(typeName is null) return;
+        LoadedCategory?.UpdateTypes(propHeader.Text, typeName);
+    }
+
+    private void HeaderBox_TextChanged(object? sender, TextChangedEventArgs args)
+    {
+        if(LoadedCategory is null) return;
+
+        var headerBox = sender as TextBox;
+        if(headerBox is null) return;
+        if(headerBox.Text is null) return;
+
+        foreach(var prop in LoadedCategory.Properties)
+        {
+            if(!prop.Name.Equals(_selectedPropertyName)) continue;
+
+            LoadedCategory.UpdateItemPropName(prop.Name, headerBox.Text);
+            prop.Name = headerBox.Text;
+            _selectedPropertyName = headerBox.Text;
+            break;
+        }
+
+    }
+
+    private void HeaderBox_GotFocus(object? sender, EventArgs args)
+    {
+        _selectedPropertyName = (sender as TextBox)?.Text;
     }
 }

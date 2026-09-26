@@ -1,0 +1,17 @@
+BUG/FIX:
+DELETE   - past structure - that is - TreeNode;
+FIXED    - Type update;
+FIXED    - Type update updates correctly but for new items;
+FIXED    - Delete item button does not work;
+BUG      - Add new property does not validate for new value text boxes of existing items;
+ADD      - Delete button for properties;
+
+REMAKE:
+RMK  OPT - Data structure of categories-items should be: Category[TypeProp | Items], Item[ValueProp] in order not to have too many type variables;
+
+ROADMAP:
+ADD      - functionality for AddCategory button;
+ADD      - SubCategories;
+ADD      - Export handling (JSON / MyDS);       (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)
+ADD  OPT - Settings (preferences for the app such as themes and behaviour);
+ADD  OPT - Templates such as: [BASIC RPG]... etc...
