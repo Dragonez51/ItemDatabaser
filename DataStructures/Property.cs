@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -19,11 +18,12 @@ public partial class Property : ObservableObject
     public object? BindValue { get => Value; set => SetValue(value); }
     public string? BindValueType { get => ValueType.Name; set => SetType(value); }
 
-    public Property(){}
+    public Property(){ Validate(); }
 
     public Property(string name)
     {
         Name = name;
+        Validate();
     }
 
     public Property(string name, Type valueType, object value)
