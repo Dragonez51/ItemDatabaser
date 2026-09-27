@@ -19,16 +19,16 @@ public partial class StructureViewModel : ViewModelBase
     {
         var weaponsProperties = new ObservableCollection<Property>()
         {
-            new Property("Damage", typeof(Int32), 1),
-            new Property("Durability", typeof(Int32), 10),
+            new Property("Damage", typeof(Int32), 1, 1),
+            new Property("Durability", typeof(Int32), 10, 2),
         };
 
         CategoryNodes.Add(new Category("Weapons", weaponsProperties));
 
         var armorProperties = new ObservableCollection<Property>()
         {
-            new Property("Defense", typeof(Int32), 1),
-            new Property("Durability", typeof(Int32), 10),
+            new Property("Defense", typeof(Int32), 1, 1),
+            new Property("Durability", typeof(Int32), 10, 2),
         };
 
         CategoryNodes.Add(new Category("Armor", armorProperties));

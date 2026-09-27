@@ -9,9 +9,11 @@ BUG      - If there are two properties of the same name, the first from left wil
 
 REMAKE:
 RMK  OPT - Data structure of categories-items should be: Category[TypeProp | Items], Item[ValueProp] in order not to have too many type variables;
+RMK      - Data generation in InspectorViewModel. Optimize this generation so that new Items nor new Properties do not have to redraw the full DataGrid.
 
 ROADMAP:
-ADD      - InspectorView DataGrid column manipulation (fuck)
+ADD DONE - InspectorView DataGrid column manipulation - each prop should contain column id (that's why we should separate category properties and item properties);
+ADD      - InspectorView delete property button;
 ADD      - functionality for AddCategory button;
 ADD      - SubCategories;
 ADD      - Export handling (JSON / MyDS);       (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)

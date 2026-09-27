@@ -8,7 +8,7 @@ public partial class Property : ObservableObject
 {
     [ObservableProperty] private IBrush _validation = Brush.Parse("#0f0");
 
-    public int Column { get; set; } = 1; 
+    public int Column { get; set; }
 
     public string Name { get; set; } = "New Property";
 
@@ -20,17 +20,21 @@ public partial class Property : ObservableObject
 
     public Property(){ Validate(); }
 
-    public Property(string name)
+    public Property(int column){ Column = column; Validate(); }
+
+    public Property(string name, int column)
     {
         Name = name;
+        Column = column;
         Validate();
     }
 
-    public Property(string name, Type valueType, object value)
+    public Property(string name, Type valueType, object value, int column)
     {
         Name = name;
         ValueType = valueType;
         Value = value;
+        Column = column;
     }
 
     public void SetType(string? typeName)

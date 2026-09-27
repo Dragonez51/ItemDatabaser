@@ -47,7 +47,7 @@ public partial class Item : ObservableObject
         Properties = new ();
         foreach(var property in newProperties)
         {
-            var newProp = new Property(property.Name);
+            var newProp = new Property(property.Name, property.Column);
             newProp.SetType(property.ValueType.Name);
 
             Properties.Add(newProp);
@@ -55,22 +55,40 @@ public partial class Item : ObservableObject
         return;
     }
 
-    public void AddProperty()
+    public void AddProperty(int column)
     {
         if(Properties is null) return;
-        Property newProperty = new Property();
+        Property newProperty = new Property(column);
         
         Properties.Add(newProperty);
     }
 
-    public void DeleteProperty(string propertyName)
+    public void DeleteProperty(int column)
+    {
+        if(Properties is null) return;
+
+        Property? delProp = null;
+        foreach(var prop in Properties)
+        {
+            if(prop.Column > column) { prop.Column--; continue; }
+            if(prop.Column != column) continue;
+
+            delProp = prop;
+        }
+        if(delProp is null) return;
+        Properties.Remove(delProp);
+    }
+
+    public void SetPropColumn(string propName, int column)
     {
         if(Properties is null) return;
         foreach(var prop in Properties)
         {
-            if(!prop.Name.Equals(propertyName)) continue;
-
-            Properties.Remove(prop);
+            if(prop.Name.Equals(propName))
+            { 
+                prop.Column = column;
+                break;
+            }
         }
     }
 }

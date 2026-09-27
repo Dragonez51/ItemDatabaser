@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ItemDatabaser.DataStructures;
 
 namespace ItemDatabaser.ViewModels;
@@ -33,9 +35,14 @@ public partial class InspectorViewModel : ViewModelBase
     {
         Types = new List<string>()
         {
-            typeof(Int16).Name,
+            typeof(byte).Name,
+            typeof(sbyte).Name,
+            typeof(short).Name,
+            typeof(ushort).Name,
             typeof(int).Name,
+            typeof(uint).Name,
             typeof(long).Name,
+            typeof(ulong).Name,
             typeof(char).Name,
             typeof(string).Name,
             typeof(bool).Name
@@ -69,24 +76,62 @@ public partial class InspectorViewModel : ViewModelBase
 
         DataGrid.Children.Add(border);
 
-        int columnIndexer = 1;
         foreach(var property in LoadedCategory.Properties)
         {
             DataGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto)); // properties columns
             
             border = new Border();
             border.Classes.Add("HeaderBorder");
-            border[Grid.ColumnProperty] = columnIndexer;
+            border[Grid.ColumnProperty] = property.Column;
 
             StackPanel sp = new StackPanel(){ Orientation = Avalonia.Layout.Orientation.Vertical };
             sp.Classes.Add("HeaderStackPanel");
+
+            StackPanel innerSP = new StackPanel(){ Orientation = Avalonia.Layout.Orientation.Horizontal };
+            innerSP.Classes.Add("HeaderStackPanel");
 
             TextBox HeaderName = new TextBox(){ Text = property.Name };
             HeaderName.AddHandler(TextBox.TextChangedEvent, HeaderBox_TextChanged);
             HeaderName.AddHandler(TextBox.GotFocusEvent, HeaderBox_GotFocus);
             HeaderName.Classes.Add("HeaderBox");
 
-            sp.Children.Add(HeaderName);
+            var modButtonImg = new Image(){ Source = new Bitmap(AssetLoader.Open(new Uri("avares://ItemDatabaser/Assets/Img/ModButtonImg.png"))) };
+            modButtonImg.Classes.Add("ButtonImage");
+            modButtonImg.Width = 10;
+            Button ModButton = new Button(){ Content = modButtonImg };
+            ModButton.Width = 20;
+
+            var ModFlyout = new MenuFlyout();
+
+            MenuItem Left = new MenuItem();
+            Left.Header = "< Left";
+            Left.Command = MovePropLeftCommand;
+            Left.CommandParameter = property.Column;
+            ModFlyout.Items.Add(Left);
+
+            MenuItem Right = new MenuItem();
+            Right.Header = "> Right";
+            Right.Command = MovePropRightCommand;
+            Right.CommandParameter = property.Column;
+            ModFlyout.Items.Add(Right);
+
+            MenuItem Separator = new MenuItem();
+            Separator.Header = "-";
+            ModFlyout.Items.Add(Separator);
+
+            MenuItem DeleteProp = new MenuItem();
+            DeleteProp.Icon = new Image(){ Source = new Bitmap(AssetLoader.Open(new Uri("avares://ItemDatabaser/Assets/Img/Trashcan.png"))) };
+            DeleteProp.Header = "Delete";
+            DeleteProp.Command = DeletePropCommand;
+            DeleteProp.CommandParameter = property.Column;
+            ModFlyout.Items.Add(DeleteProp);
+
+            ModButton.Flyout = ModFlyout;
+
+            innerSP.Children.Add(HeaderName);
+            innerSP.Children.Add(ModButton);
+
+            sp.Children.Add(innerSP);
 
             ComboBox TypeBox = new ComboBox() { ItemsSource = Types };
             TypeBox.Bind(ComboBox.SelectedItemProperty, new ReflectionBinding(nameof(property.BindValueType)){ Source = property, Mode=BindingMode.TwoWay });
@@ -99,8 +144,6 @@ public partial class InspectorViewModel : ViewModelBase
             border.Child = sp;
 
             DataGrid.Children.Add(border);
-            
-            columnIndexer++;
         }
 
         DataGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto)); // delete item button / add property button column
@@ -109,7 +152,7 @@ public partial class InspectorViewModel : ViewModelBase
         addIcon.Classes.Add("ButtonImage");
 
         var AddPropButton = new Button(){ Content = addIcon };
-        AddPropButton[Grid.ColumnProperty] = columnIndexer;
+        AddPropButton[Grid.ColumnProperty] = LoadedCategory.Properties.Count+1;
         AddPropButton.AddHandler(Button.ClickEvent, AddProp);
         AddPropButton.Classes.Add("Add");
 
@@ -150,7 +193,6 @@ public partial class InspectorViewModel : ViewModelBase
 
             if(item.Properties is null) break;
 
-            int propColumnIndex = 1;
             foreach(var property in item.Properties)
             {
                 TextBox ValueBox = new TextBox();
@@ -159,20 +201,18 @@ public partial class InspectorViewModel : ViewModelBase
                     Source = property,
                     Mode = BindingMode.TwoWay
                 });
-                ValueBox[Grid.ColumnProperty] = propColumnIndex;
+                ValueBox[Grid.ColumnProperty] = property.Column;
                 ValueBox[Grid.RowProperty] = rowIndex;
                 ValueBox.DataContext = property;
                 ValueBox.Classes.Add("ValueBox");
                 ValueBox.Classes.Add("Validate");
 
                 DataGrid.Children.Add(ValueBox); 
-
-                propColumnIndex++;
             }
 
             Button Delete = new Button();
             Delete.AddHandler(Button.ClickEvent, DeleteItem);
-            Delete[Grid.ColumnProperty] = propColumnIndex;
+            Delete[Grid.ColumnProperty] = LoadedCategory.Properties.Count+1;
             Delete[Grid.RowProperty] = rowIndex;
             Delete.Bind(Button.NameProperty, new ReflectionBinding(nameof(item.ItemID)){ Source = item });
             var deleteImg = new Image(){ Source = new Bitmap(AssetLoader.Open(new Uri("avares://ItemDatabaser/Assets/Img/Trashcan.png"))) };
@@ -238,9 +278,11 @@ public partial class InspectorViewModel : ViewModelBase
         var sp = senderTypeBox.Parent as StackPanel;
         if(sp is null) return;
 
-        var propHeader = sp.Children[0] as TextBox;
-        if(propHeader is null) return;
+        var UpperSP = sp.Children[0] as StackPanel;
+        if(UpperSP is null) return;
 
+        var propHeader = UpperSP.Children[0] as TextBox;
+        if(propHeader is null) return;
 
         // Debug.WriteLine($"[InspectorViewModel] TypeBox_TypeChanged() => Successfully got property name: {propHeader.Text}"); 
 
@@ -273,5 +315,32 @@ public partial class InspectorViewModel : ViewModelBase
     private void HeaderBox_GotFocus(object? sender, EventArgs args)
     {
         _selectedPropertyName = (sender as TextBox)?.Text;
+    }
+
+    [RelayCommand]
+    private void MovePropLeft(int index)
+    {
+        if(LoadedCategory is null) return;
+        if(index == 1) return;
+        LoadedCategory.MoveProp("Left", index);
+        GenerateData();
+    }
+
+    [RelayCommand]
+    private void MovePropRight(int index)
+    {
+        if(LoadedCategory is null) return;
+        if(index == LoadedCategory.Properties.Count) return;
+        LoadedCategory.MoveProp("Right", index);
+        GenerateData();
+    }
+
+    [RelayCommand]
+    private void DeleteProp(int index)
+    {
+        // Debug.WriteLine($"[InspectorViewModel] DeleteProp() => [index: {index}]");
+        if(LoadedCategory is null) return;
+        LoadedCategory.DeleteProperty(index);
+        GenerateData();
     }
 }
