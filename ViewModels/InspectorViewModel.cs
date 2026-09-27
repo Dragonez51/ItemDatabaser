@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Data;
-using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,17 +12,16 @@ namespace ItemDatabaser.ViewModels;
 
 public partial class InspectorViewModel : ViewModelBase
 {
-    [ObservableProperty] private bool _isTextVisible = true;
-    [ObservableProperty] private bool _isPropertiesVisible = false;
+    [ObservableProperty] private bool _isTextVisible = true; // should "Select category" text be visible
+    [ObservableProperty] private bool _isPropertiesVisible = false; // should data table be visible
 
     [ObservableProperty] private List<string>? _types; // list of types to choose from typeBox
 
     [ObservableProperty] private Category? _loadedCategory; // selected category of items
 
     [ObservableProperty] private Grid? _dataGrid; // Avalonia object to bind visuals
-    [ObservableProperty] private Item? _drawnItem; // idk?
 
-    private string? _selectedPropertyName;
+    private string? _selectedPropertyName; // previous property name while changing property name
 
     public InspectorViewModel()
     {
@@ -76,7 +73,7 @@ public partial class InspectorViewModel : ViewModelBase
 
         DataGrid.Children.Add(border);
 
-        foreach(var property in LoadedCategory.Properties)
+        foreach(var property in LoadedCategory.PropDefs)
         {
             DataGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto)); // properties columns
             
@@ -135,6 +132,7 @@ public partial class InspectorViewModel : ViewModelBase
 
             ComboBox TypeBox = new ComboBox() { ItemsSource = Types };
             TypeBox.Bind(ComboBox.SelectedItemProperty, new ReflectionBinding(nameof(property.BindValueType)){ Source = property, Mode=BindingMode.TwoWay });
+            TypeBox.Name = Convert.ToString(property.PropertyID);
             TypeBox.AddHandler(ComboBox.SelectionChangedEvent, TypeBox_TypeChanged);
             TypeBox.Classes.Add("TypeBox");
             TypeBox.Classes.Add("Validate");
@@ -152,8 +150,8 @@ public partial class InspectorViewModel : ViewModelBase
         addIcon.Classes.Add("ButtonImage");
 
         var AddPropButton = new Button(){ Content = addIcon };
-        AddPropButton[Grid.ColumnProperty] = LoadedCategory.Properties.Count+1;
-        AddPropButton.AddHandler(Button.ClickEvent, AddProp);
+        AddPropButton[Grid.ColumnProperty] = LoadedCategory.PropDefs.Count+1;
+        AddPropButton.Command = AddPropCommand;
         AddPropButton.Classes.Add("Add");
 
         DataGrid.Children.Add(AddPropButton);
@@ -177,8 +175,6 @@ public partial class InspectorViewModel : ViewModelBase
         {
             DataGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
 
-            DrawnItem = item;
-
             TextBox NameBox = new TextBox();
             NameBox.Bind(TextBox.TextProperty, new ReflectionBinding(nameof(item.Name))
             {
@@ -191,17 +187,15 @@ public partial class InspectorViewModel : ViewModelBase
 
             DataGrid.Children.Add(NameBox);
 
-            if(item.Properties is null) break;
-
-            foreach(var property in item.Properties)
+            foreach(var property in item.PropValues)
             {
                 TextBox ValueBox = new TextBox();
-                ValueBox.Bind(TextBox.TextProperty, new ReflectionBinding(nameof(property.BindValue))
+                ValueBox.Bind(TextBox.TextProperty, new ReflectionBinding(nameof(property.Value))
                 {
                     Source = property,
                     Mode = BindingMode.TwoWay
                 });
-                ValueBox[Grid.ColumnProperty] = property.Column;
+                ValueBox[Grid.ColumnProperty] = property.PropertyDefinition.Column;
                 ValueBox[Grid.RowProperty] = rowIndex;
                 ValueBox.DataContext = property;
                 ValueBox.Classes.Add("ValueBox");
@@ -211,12 +205,15 @@ public partial class InspectorViewModel : ViewModelBase
             }
 
             Button Delete = new Button();
-            Delete.AddHandler(Button.ClickEvent, DeleteItem);
-            Delete[Grid.ColumnProperty] = LoadedCategory.Properties.Count+1;
+            Delete[Grid.ColumnProperty] = LoadedCategory.PropDefs.Count+1;
             Delete[Grid.RowProperty] = rowIndex;
             Delete.Bind(Button.NameProperty, new ReflectionBinding(nameof(item.ItemID)){ Source = item });
+            Delete.Command = DeleteItemCommand;
+            Delete.CommandParameter = Delete.Name;
+
             var deleteImg = new Image(){ Source = new Bitmap(AssetLoader.Open(new Uri("avares://ItemDatabaser/Assets/Img/Trashcan.png"))) };
             deleteImg.Classes.Add("ButtonImage");
+            
             Delete.Content = deleteImg;
             Delete.Classes.Add("Delete");
 
@@ -232,64 +229,18 @@ public partial class InspectorViewModel : ViewModelBase
         IsPropertiesVisible = true;
     }
 
-    public void AddItem()
-    {
-        LoadedCategory?.AddItem();
-        GenerateData();
-    }
-
-    public void DeleteItem(object? sender, RoutedEventArgs e)
-    {
-        var button = sender as Button;
-        if(button is null) return;
-        if(button.Name is null) return;
-        DeleteItem(button.Name);
-    }
-    public void DeleteItem(string id)
+    private void TypeBox_TypeChanged(object? sender, SelectionChangedEventArgs e)
     {
         if(LoadedCategory is null) return;
 
-        foreach(var item in LoadedCategory.Items)
-        {
-            if(item.ItemID != Int32.Parse(id)) continue;
+        var comboBox = sender as ComboBox;
+        if(comboBox is null) return;
+        if(comboBox.Name is null) return;
+        if(comboBox.SelectedItem is null) return;
 
-            LoadedCategory.Items.Remove(item);
-            GenerateData();
-            return;
-        }
-    }
+        var propID = Int32.Parse(comboBox.Name);
 
-    public void AddProp(object? sender, RoutedEventArgs e) => AddProp();
-    public void AddProp()
-    {
-        LoadedCategory?.AddProperty();
-        GenerateData();
-    }
-
-    private void TypeBox_TypeChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        // Debug.WriteLine("[InspectorViewModel] TypeBox_TypeChanged() => ");
-        // Debug.WriteLine("");
-        var senderTypeBox = sender as ComboBox;
-        if(senderTypeBox is null) return;
-        if(senderTypeBox.SelectedItem is null) return;
-        string typeName = (string)senderTypeBox.SelectedItem;
-        
-        var sp = senderTypeBox.Parent as StackPanel;
-        if(sp is null) return;
-
-        var UpperSP = sp.Children[0] as StackPanel;
-        if(UpperSP is null) return;
-
-        var propHeader = UpperSP.Children[0] as TextBox;
-        if(propHeader is null) return;
-
-        // Debug.WriteLine($"[InspectorViewModel] TypeBox_TypeChanged() => Successfully got property name: {propHeader.Text}"); 
-
-        // LoadedCategory?.UpdateItems();
-        if(propHeader.Text is null) return;
-        if(typeName is null) return;
-        LoadedCategory?.UpdateTypes(propHeader.Text, typeName);
+        LoadedCategory.SetType(propID, (string)comboBox.SelectedItem);
     }
 
     private void HeaderBox_TextChanged(object? sender, TextChangedEventArgs args)
@@ -300,11 +251,11 @@ public partial class InspectorViewModel : ViewModelBase
         if(headerBox is null) return;
         if(headerBox.Text is null) return;
 
-        foreach(var prop in LoadedCategory.Properties)
+        foreach(var prop in LoadedCategory.PropDefs)
         {
             if(!prop.Name.Equals(_selectedPropertyName)) continue;
 
-            LoadedCategory.UpdateItemPropName(prop.Name, headerBox.Text);
+            LoadedCategory.SetPropName(prop.PropertyID, headerBox.Text);
             prop.Name = headerBox.Text;
             _selectedPropertyName = headerBox.Text;
             break;
@@ -317,8 +268,7 @@ public partial class InspectorViewModel : ViewModelBase
         _selectedPropertyName = (sender as TextBox)?.Text;
     }
 
-    [RelayCommand]
-    private void MovePropLeft(int index)
+    [RelayCommand] private void MovePropLeft(int index)
     {
         if(LoadedCategory is null) return;
         if(index == 1) return;
@@ -326,21 +276,45 @@ public partial class InspectorViewModel : ViewModelBase
         GenerateData();
     }
 
-    [RelayCommand]
-    private void MovePropRight(int index)
+    [RelayCommand] private void MovePropRight(int index)
     {
         if(LoadedCategory is null) return;
-        if(index == LoadedCategory.Properties.Count) return;
+        if(index == LoadedCategory.PropDefs.Count) return;
         LoadedCategory.MoveProp("Right", index);
         GenerateData();
     }
 
-    [RelayCommand]
-    private void DeleteProp(int index)
+    [RelayCommand] private void DeleteProp(int index)
     {
-        // Debug.WriteLine($"[InspectorViewModel] DeleteProp() => [index: {index}]");
         if(LoadedCategory is null) return;
         LoadedCategory.DeleteProperty(index);
         GenerateData();
+    }
+
+    [RelayCommand] public void AddProp()
+    {
+        if(LoadedCategory is null) return;
+        LoadedCategory.AddPropDef();
+        GenerateData();
+    }
+
+    public void AddItem()
+    {
+        LoadedCategory?.AddItem();
+        GenerateData();
+    }
+
+    [RelayCommand] public void DeleteItem(string id)
+    {
+        if(LoadedCategory is null) return;
+
+        foreach(var item in LoadedCategory.Items)
+        {
+            if(item.ItemID != Int32.Parse(id)) continue;
+
+            LoadedCategory.Items.Remove(item);
+            GenerateData();
+            return;
+        }
     }
 }

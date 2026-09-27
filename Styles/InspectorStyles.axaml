@@ -34,9 +34,9 @@
       <Setter Property="VerticalContentAlignment" Value="Center"/>
    </Style>
    <Style Selector="TextBox.Validate">
-      <Setter Property="BorderBrush" Value="{Binding $self.((ds:Property)DataContext).Validation}"/>
+      <Setter Property="BorderBrush" Value="{Binding $self.((ds:PropertyValue)DataContext).Validation}"/>
       <Style Selector="^:focus /template/ Border">
-         <Setter Property="BorderBrush" Value="{Binding $self.((ds:Property)DataContext).Validation}"/>
+         <Setter Property="BorderBrush" Value="{Binding $self.((ds:PropertyValue)DataContext).Validation}"/>
       </Style>
    </Style>
 

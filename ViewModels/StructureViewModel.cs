@@ -1,6 +1,6 @@
-using System;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
+using CommunityToolkit.Mvvm.Input;
 using ItemDatabaser.DataStructures;
 
 namespace ItemDatabaser.ViewModels;
@@ -11,27 +11,27 @@ public partial class StructureViewModel : ViewModelBase
 
     public StructureViewModel()
     {
-        CreateCategoryItemStructure();
+        CreateTestStructure();
     }
 
-    // This creates a basic template for testing during development stage
-    private void CreateCategoryItemStructure()
+// This creates a basic template for testing during development stage
+    private void CreateTestStructure()
     {
-        var weaponsProperties = new ObservableCollection<Property>()
+        var weaponsProps = new ObservableCollection<PropertyDefinition>()
         {
-            new Property("Damage", typeof(Int32), 1, 1),
-            new Property("Durability", typeof(Int32), 10, 2),
+            new PropertyDefinition("Damage", 1),
+            new PropertyDefinition("Durability", 2),
+            new PropertyDefinition("IsToxic", 3, typeof(bool)),
         };
+        CategoryNodes.Add(new Category("Weapons", weaponsProps));
 
-        CategoryNodes.Add(new Category("Weapons", weaponsProperties));
-
-        var armorProperties = new ObservableCollection<Property>()
+        var armorProps = new ObservableCollection<PropertyDefinition>()
         {
-            new Property("Defense", typeof(Int32), 1, 1),
-            new Property("Durability", typeof(Int32), 10, 2),
+            new PropertyDefinition("Defense", 1),
+            new PropertyDefinition("Durability", 2),
+            new PropertyDefinition("IsHeavy", 3, typeof(bool)),
         };
-
-        CategoryNodes.Add(new Category("Armor", armorProperties));
+        CategoryNodes.Add(new Category("Armor", armorProps));
     }
 
     public void TreeView_SelectionChanged(object? sender, SelectionChangedEventArgs args)
@@ -42,5 +42,10 @@ public partial class StructureViewModel : ViewModelBase
 
         var category = item as Category;
         if(!(category is null)) MainWindowViewModel.LoadInspector(category);
+    }
+
+    [RelayCommand] public void AddCategory()
+    {
+        CategoryNodes.Add(new Category());
     }
 }

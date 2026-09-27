@@ -4,18 +4,20 @@ FIXED    - Type update;
 FIXED    - Type update updates correctly but for new items;
 FIXED    - Delete item button does not work;
 FIXED    - Add new property does not validate for new value text boxes of existing items;
-ADD      - Delete button for properties;
-BUG      - If there are two properties of the same name, the first from left will be updated. (Distinguish them)
+ADDED    - Delete button for properties;
+FIXED    - If there are two properties of the same name, the first from left will be updated. (Distinguish them)
 
 REMAKE:
-RMK  OPT - Data structure of categories-items should be: Category[TypeProp | Items], Item[ValueProp] in order not to have too many type variables;
+RMK DONE - Data structure of categories-items should be: Category[PropertyDefinition | Items], Item[PropertyValue] in order not to have too many type variables;
 RMK      - Data generation in InspectorViewModel. Optimize this generation so that new Items nor new Properties do not have to redraw the full DataGrid.
 
 ROADMAP:
 ADD DONE - InspectorView DataGrid column manipulation - each prop should contain column id (that's why we should separate category properties and item properties);
-ADD      - InspectorView delete property button;
-ADD      - functionality for AddCategory button;
-ADD      - SubCategories;
-ADD      - Export handling (JSON / MyDS);       (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)
+ADD DONE - InspectorView delete property button;
+ADD DONE - functionality for AddCategory button;
+ADD      - Export handling (JSON / MyDS / CSV?);
+ADD      - Import handling (JSON / MyDS / CSV?);
+ADD  OPT - SubCategories;
+OPTIMIZE - Optimize Data Generation.                (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)
 ADD  OPT - Settings (preferences for the app such as themes and behaviour);
 ADD  OPT - Templates such as: [BASIC RPG]... etc...

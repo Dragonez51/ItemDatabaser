@@ -1,99 +1,90 @@
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ItemDatabaser.DataStructures;
 
 public partial class Category : ObservableObject
 {
-    public ObservableCollection<Property> Properties    { get; private set; } = new ();
+    public ObservableCollection<PropertyDefinition> PropDefs { get; private set; } = new ();
     public ObservableCollection<Item>     Items         { get; private set; } = new ();
 
     public ObservableCollection<Category> SubCategories { get; private set; } = new ();
 
     [ObservableProperty] private string _name = "New Category";
 
+    public Category(){}
+
     public Category(string name)
     {
         Name = name;
     }
 
-    public Category(string name, ObservableCollection<Property> properties)
+    public Category(string name, ObservableCollection<PropertyDefinition> properties)
     {
         Name = name;
-        Properties = properties;
+        PropDefs = properties;
     }
 
-    public Category(string name, ObservableCollection<Property> properties, ObservableCollection<Item> items)
+    public Category(string name, ObservableCollection<PropertyDefinition> properties, ObservableCollection<Item> items)
     {
         Name = name;
-        Properties = properties;
+        PropDefs = properties;
         Items = items;
     }
 
-    public void AddProperty() 
-    { 
-        int column = Properties.Count+1;
+    public void AddPropDef()
+    {
+        int column = PropDefs.Count + 1;
 
-        Properties.Add(new Property(column));
-        
+        var newProp = new PropertyDefinition(column);
+        PropDefs.Add(newProp);
+
         foreach(var item in Items)
         {
-            item.AddProperty(column);
-        } 
+            item.AddPropValue(newProp);
+        }
+    }
+
+    public void SetType(int propID, string typeName)
+    {
+        foreach(var prop in PropDefs)
+        {
+            if(prop.PropertyID != propID) continue;
+
+            prop.SetType(typeName);
+            ValidateProperty(prop);
+            break;
+        }
+    }
+
+    private void ValidateProperty(PropertyDefinition propDef)
+    {
+        foreach(var item in Items)
+        {
+            item.ValidateProperty(propDef);
+        }
+    }
+
+    public void SetPropName(int propID, string newName)
+    {
+        foreach(var prop in PropDefs)
+        {
+            if(prop.PropertyID != propID) continue;
+
+            prop.Name = newName;
+            break;
+        }
     }
 
     public void AddItem()
     {
-        Items.Add(new Item(Properties));
-    }
-
-    public void UpdateTypes(string propName, string typeName)
-    {
-        // set type for category properties
-        foreach(var prop in Properties)
-        {
-            if(!prop.Name.Equals(propName)) continue;
-
-            Debug.WriteLine("[Category] UpdateTypes()=> found the correct category prop!");
-
-            prop.SetType(typeName);
-            break;
-        }
-
-        // set type for each item property in category
-        foreach(var item in Items)
-        {
-            if(item.Properties is null) return;
-            foreach(var prop in item.Properties)
-            {
-                if (!prop.Name.Equals(propName)) continue;
-                
-                prop.SetType(typeName);
-                break;
-            }
-        }
-    }
-
-    public void UpdateItemPropName(string propName, string newName)
-    {
-        foreach(var item in Items)
-        {
-            if(item.Properties is null) return;
-            foreach(var prop in item.Properties)
-            {
-                if(!prop.Name.Equals(propName)) continue;
-
-                prop.Name = newName;
-                break;
-            }
-        }
+        Items.Add(new Item(PropDefs));
     }
 
     public void DeleteProperty(int column)
     {
-        Property? delProp = null;
-        foreach(var prop in Properties)
+        PropertyDefinition? delProp = null;
+        foreach(var prop in PropDefs)
         {
             if(prop.Column > column){ prop.Column--; continue; }
             if(prop.Column != column) continue;
@@ -101,11 +92,11 @@ public partial class Category : ObservableObject
             delProp = prop;
         }
         if(delProp is null) return;
-        Properties.Remove(delProp);
+        PropDefs.Remove(delProp);
 
         foreach(var item in Items)
         {
-            item.DeleteProperty(column);
+            item.DeleteProp(delProp.PropertyID);
         }
     }
 
@@ -115,11 +106,12 @@ public partial class Category : ObservableObject
         if(side.Equals("Left")) secondColumn = -1;
         if(side.Equals("Right")) secondColumn = 1;
 
-        Property? first = null;
+        PropertyDefinition? first = null;
+        PropertyDefinition? second = null;
         bool firstFound = false;
         bool secondFound = false;
-        Property? second = null;
-        foreach(var prop in Properties)
+
+        foreach(var prop in PropDefs)
         {
             if(firstFound && secondFound) break;
 
@@ -130,11 +122,5 @@ public partial class Category : ObservableObject
 
         first.Column+=secondColumn;
         second.Column-=secondColumn;
-
-        foreach(var item in Items)
-        {
-            item.SetPropColumn(first.Name, first.Column);
-            item.SetPropColumn(second.Name, second.Column);
-        }
     }
 }

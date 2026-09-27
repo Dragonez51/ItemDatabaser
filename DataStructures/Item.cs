@@ -1,94 +1,65 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ItemDatabaser.DataStructures;
 
-public partial class Item : ObservableObject
+public class Item
 {
-    private static int _itemId = 1;
+    private static int _itemId = 0;
 
-    public ObservableCollection<Property>? Properties  { get; private set; }
-    [ObservableProperty] private string _name = "New Item";
+    public ObservableCollection<PropertyValue> PropValues { get; private set; } = new ();
+
+    public string Name { get; set; } = "New Item";
 
     public int ItemID { get; private set; }
     
-    public Item(ObservableCollection<Property> properties)
+    public Item(ObservableCollection<PropertyDefinition> properties)
     {
         ItemID = _itemId++;
         SetProperties(properties);
     }
 
-    public Item(string name, ObservableCollection<Property> properties)
+    public Item(string name, ObservableCollection<PropertyDefinition> properties)
     {
         Name = name;  
         ItemID = _itemId++;
         SetProperties(properties);
     }
 
-    public void SetValue(string name, object value)
+    public void AddPropValue(PropertyDefinition propertyDefinition)
     {
-        if(Properties is null) return;
+        var newProp = new PropertyValue(propertyDefinition);
 
-        foreach(Property property in Properties)
+        PropValues.Add(newProp);
+    }
+
+    private void SetProperties(ObservableCollection<PropertyDefinition> props)
+    {
+        foreach(var prop in props)
         {
-            if(property is null) throw new System.Exception("[Item] SetValues() => conversion is null!");
-            if (property.Name.Equals(name))
-            {
-                property.Value = value;
-                return;
-            }
+            PropValues.Add(new PropertyValue(prop));
         }
     }
 
-    public void SetProperties(ObservableCollection<Property> newProperties)
+    public void ValidateProperty(PropertyDefinition propDef)
     {
-        if(!(Properties is null)) return;
-        
-        Properties = new ();
-        foreach(var property in newProperties)
+        foreach (var prop in PropValues)
         {
-            var newProp = new Property(property.Name, property.Column);
-            newProp.SetType(property.ValueType.Name);
+            if(prop.PropertyDefinition.PropertyID != propDef.PropertyID) continue;
 
-            Properties.Add(newProp);
+            prop.Validate();
+            break;
         }
-        return;
     }
 
-    public void AddProperty(int column)
+    public void DeleteProp(int propID)
     {
-        if(Properties is null) return;
-        Property newProperty = new Property(column);
-        
-        Properties.Add(newProperty);
-    }
-
-    public void DeleteProperty(int column)
-    {
-        if(Properties is null) return;
-
-        Property? delProp = null;
-        foreach(var prop in Properties)
+        if(PropValues is null) return;
+        foreach(var prop in PropValues)
         {
-            if(prop.Column > column) { prop.Column--; continue; }
-            if(prop.Column != column) continue;
-
-            delProp = prop;
-        }
-        if(delProp is null) return;
-        Properties.Remove(delProp);
-    }
-
-    public void SetPropColumn(string propName, int column)
-    {
-        if(Properties is null) return;
-        foreach(var prop in Properties)
-        {
-            if(prop.Name.Equals(propName))
-            { 
-                prop.Column = column;
-                break;
-            }
+            if(prop.PropertyDefinition.PropertyID != propID) continue;
+            
+            PropValues.Remove(prop);
+            break;
         }
     }
 }
