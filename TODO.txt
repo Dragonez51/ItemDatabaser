@@ -1,15 +1,20 @@
 BUG/FIX:
-DELETE   - past structure - that is - TreeNode;
+DELETED  - past structure - that is - TreeNode;
 FIXED    - Type update;
 FIXED    - Type update updates correctly but for new items;
 FIXED    - Delete item button does not work;
 FIXED    - Add new property does not validate for new value text boxes of existing items;
 ADDED    - Delete button for properties;
-FIXED    - If there are two properties of the same name, the first from left will be updated. (Distinguish them)
+FIXED    - If there are two properties of the same name, the first from left will be updated. (Distinguish them);
+CHANGED  - Move DataGrid from InspectorViewModel to a different class;
+
+FIX      - Upper property column panel (the one for managing property name + position) does not stretch when it's smaller than the lower panel (?styling issue?)
+FIX      - If columns are moved, clicking tab jumps across different rows; (maybe it can be fixed via optimization solution)
 
 REMAKE:
 RMK DONE - Data structure of categories-items should be: Category[PropertyDefinition | Items], Item[PropertyValue] in order not to have too many type variables;
 RMK      - Data generation in InspectorViewModel. Optimize this generation so that new Items nor new Properties do not have to redraw the full DataGrid.
+RMK      - PropertyDefinition & PropertyValue do not have to use Type type. (It is forbidden during serialization)(also, it is not needed for anything)
 
 ROADMAP:
 ADD DONE - InspectorView DataGrid column manipulation - each prop should contain column id (that's why we should separate category properties and item properties);
@@ -19,5 +24,5 @@ ADD      - Export handling (JSON / MyDS / CSV?);
 ADD      - Import handling (JSON / MyDS / CSV?);
 ADD  OPT - SubCategories;
 OPTIMIZE - Optimize Data Generation.                (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)
-ADD  OPT - Settings (preferences for the app such as themes and behaviour);
+ADD  OPT - Settings (preferences for the app such as themes and behavior);
 ADD  OPT - Templates such as: [BASIC RPG]... etc...

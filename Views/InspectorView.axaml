@@ -1,9 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:ds="using:ItemDatabaser.DataStructures"
         d:DesignWidth="400"
-        xmlns:v="clr-namespace:ItemDatabaser.Views"
         xmlns:vm="clr-namespace:ItemDatabaser.ViewModels"
         x:Class="ItemDatabaser.Views.InspectorView"
         x:DataType="vm:InspectorViewModel"
@@ -13,7 +11,7 @@
         <ScrollViewer>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsPropertiesVisible}">
                 <Border Classes="Base">
-                    <TextBox Text="{Binding LoadedCategory.Name, Mode=TwoWay}" TextAlignment="Center" FontSize="20" FontWeight="Bold"/>
+                    <TextBox Text="{Binding CategoryName, Mode=TwoWay}" TextAlignment="Center" FontSize="20" FontWeight="Bold"/>
                 </Border>
                 <Border Classes="Base">
                     <ContentControl Content="{Binding DataGrid}"/>
