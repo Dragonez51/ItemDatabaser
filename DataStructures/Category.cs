@@ -51,7 +51,7 @@ public partial class Category : ObservableObject
         {
             if(prop.PropertyID != propID) continue;
 
-            prop.SetType(typeName);
+            prop.TrySetType(typeName);
             ValidateProperty(prop);
             break;
         }

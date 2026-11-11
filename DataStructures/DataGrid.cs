@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media.Imaging;
@@ -121,7 +122,8 @@ public partial class DataGrid : ObservableObject
             sp.Children.Add(innerSP);
 
             ComboBox TypeBox = new ComboBox() { ItemsSource = Types };
-            TypeBox.Bind(ComboBox.SelectedItemProperty, new ReflectionBinding(nameof(property.BindValueType)){ Source = property, Mode=BindingMode.TwoWay });
+            TypeBox.SelectedItem = property.ValueType;
+            // TypeBox.Bind(ComboBox.SelectedItemProperty, new ReflectionBinding(nameof(property.ValueType)){ Source = property });
             TypeBox.Name = Convert.ToString(property.PropertyID);
             TypeBox.AddHandler(ComboBox.SelectionChangedEvent, TypeBox_TypeChanged);
             TypeBox.Classes.Add("TypeBox");
@@ -218,9 +220,9 @@ public partial class DataGrid : ObservableObject
         if(LoadedCategory is null) return;
 
         var comboBox = sender as ComboBox;
-        if(comboBox is null) return;
-        if(comboBox.Name is null) return;
-        if(comboBox.SelectedItem is null) return;
+        if(comboBox is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox is null!");
+        if(comboBox.Name is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox.Name is null!");
+        if(comboBox.SelectedItem is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox.SelectedItem is null!"); 
 
         var propID = Int32.Parse(comboBox.Name);
 

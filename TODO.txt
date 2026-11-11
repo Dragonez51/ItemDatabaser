@@ -9,12 +9,13 @@ FIXED    - If there are two properties of the same name, the first from left wil
 CHANGED  - Move DataGrid from InspectorViewModel to a different class;
 
 FIX      - Upper property column panel (the one for managing property name + position) does not stretch when it's smaller than the lower panel (?styling issue?)
-FIX      - If columns are moved, clicking tab jumps across different rows; (maybe it can be fixed via optimization solution)
+FIX      - If columns are moved, clicking tab jumps across different rows;
 
 REMAKE:
 RMK DONE - Data structure of categories-items should be: Category[PropertyDefinition | Items], Item[PropertyValue] in order not to have too many type variables;
+RMK DONE - PropertyDefinition & PropertyValue do not have to use Type type. (It is forbidden during serialization)(also, it is not needed for anything)
+
 RMK      - Data generation in InspectorViewModel. Optimize this generation so that new Items nor new Properties do not have to redraw the full DataGrid.
-RMK      - PropertyDefinition & PropertyValue do not have to use Type type. (It is forbidden during serialization)(also, it is not needed for anything)
 
 ROADMAP:
 ADD DONE - InspectorView DataGrid column manipulation - each prop should contain column id (that's why we should separate category properties and item properties);

@@ -9,7 +9,7 @@ public partial class PropertyValue : ObservableObject
     public PropertyDefinition PropertyDefinition { get; init; }
     
     private object? _value;
-    public object? Value { get => _value; set {_value = value; Validate(); } }
+    public object? Value { get => _value; set { _value = value; Validate(); } }
 
     [ObservableProperty] private IBrush _validation = Brush.Parse("#f00");
 
@@ -28,8 +28,11 @@ public partial class PropertyValue : ObservableObject
     {
         try
         {
-            var convert = Convert.ChangeType(Value, PropertyDefinition.ValueType);
-            if(convert is null)   
+            if(PropertyDefinition.ValueType is null) throw new Exception("[PropertyValue] Validate() => PropertyDefinition has a null ValueType!");
+            var type = Type.GetType(PropertyDefinition.ValueType);
+            if(type is null){ type = Type.GetType("System."+PropertyDefinition.ValueType); if(type is null) throw new Exception("[PropertyValue] Validate() => did not find type of '"+PropertyDefinition.ValueType+"'!"); }
+            var convert = Convert.ChangeType(Value, type);
+            if(convert is null)
             {
                 Invalid();
                 return;

@@ -11,10 +11,7 @@ public partial class PropertyDefinition : ObservableObject
     public int PropertyID { get; init; }
     public int Column { get; set; } = 0;
 
-    // NOTE: does it really need to be an ObservableProperty?
-    [ObservableProperty] private Type _valueType = typeof(Int32);
-
-    public string? BindValueType { get => ValueType.Name; set => SetType(value);}
+    [ObservableProperty] private string? _valueType = "Int32";
 
     public PropertyDefinition(int column)
     {
@@ -29,7 +26,7 @@ public partial class PropertyDefinition : ObservableObject
         PropertyID = nextID++;
     }
 
-    public PropertyDefinition(string name, int column, Type type)
+    public PropertyDefinition(string name, int column, string type)
     {
         Name = name;
         Column = column;
@@ -37,10 +34,16 @@ public partial class PropertyDefinition : ObservableObject
         PropertyID = nextID++;
     }
 
-    public void SetType(string? typeName)
+    public void TrySetType(string? typeName)
     {
-        var type = Type.GetType("System."+typeName);
-        if(type is null) return;
-        ValueType = type;
+        if(typeName is null) return;
+        var type = Type.GetType(typeName);
+        if(!(type is null)){ ValueType = typeName; return; } // this is support for custom types (other than System.Type)
+        else
+        {
+            type = Type.GetType("System."+typeName);
+            if(type is null) throw new Exception($"[PropertyDefinition] SetType() => type is null [typeName: {typeName}]");
+            ValueType = typeName;
+        }
     }
 }
