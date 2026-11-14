@@ -224,7 +224,7 @@ public partial class DataGrid : ObservableObject
         if(comboBox.Name is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox.Name is null!");
         if(comboBox.SelectedItem is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox.SelectedItem is null!"); 
 
-        var propID = Int32.Parse(comboBox.Name);
+        var propID = Guid.Parse(comboBox.Name);
 
         LoadedCategory.SetType(propID, (string)comboBox.SelectedItem);
     }
@@ -296,7 +296,7 @@ public partial class DataGrid : ObservableObject
 
         foreach(var item in LoadedCategory.Items)
         {
-            if(item.ItemID != Int32.Parse(id)) continue;
+            if(item.ItemID != Guid.Parse(id)) continue;
 
             LoadedCategory.Items.Remove(item);
             GenerateData();

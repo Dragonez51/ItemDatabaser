@@ -9,3 +9,6 @@ obj/
 
 #Solution (builds with every run)
 ItemDatabaser.sln
+
+#Test files:
+TestDB.json

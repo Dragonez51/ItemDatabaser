@@ -1,29 +1,29 @@
 using System;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ItemDatabaser.DataStructures;
 
 public partial class PropertyDefinition : ObservableObject
 {
-    public static int nextID = 0;
 
     public string Name { get; set; } = "New Property";
-    public int PropertyID { get; init; }
-    public int Column { get; set; } = 0;
-
     [ObservableProperty] private string? _valueType = "Int32";
+    public Guid PropertyID { get; init; }
+    [JsonIgnore] public int Column { get; set; } = 0;
+
 
     public PropertyDefinition(int column)
     {
         Column = column;
-        PropertyID = nextID++;
+        PropertyID = Guid.NewGuid();
     }
 
     public PropertyDefinition(string name, int column)
     {
         Name = name;
         Column = column;
-        PropertyID = nextID++;
+        PropertyID = Guid.NewGuid();
     }
 
     public PropertyDefinition(string name, int column, string type)
@@ -31,7 +31,7 @@ public partial class PropertyDefinition : ObservableObject
         Name = name;
         Column = column;
         ValueType = type;
-        PropertyID = nextID++;
+        PropertyID = Guid.NewGuid();
     }
 
     public void TrySetType(string? typeName)

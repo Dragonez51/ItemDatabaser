@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using ItemDatabaser.DataStructures;
@@ -7,7 +8,9 @@ namespace ItemDatabaser.ViewModels;
 
 public partial class StructureViewModel : ViewModelBase
 {
-    public ObservableCollection<Category> CategoryNodes { get; private set; } = new ();
+    [JsonPropertyOrder(0)] public string FormatVersion { get => "0.2.0"; }
+    [JsonPropertyOrder(1)] public string DatabaseName { get; private set; } = "TestDB";
+    [JsonPropertyOrder(2)][JsonPropertyName("Categories")] public ObservableCollection<Category> CategoryNodes { get; private set; } = new ();
 
     public StructureViewModel()
     {
@@ -44,7 +47,7 @@ public partial class StructureViewModel : ViewModelBase
         if(!(category is null)) MainWindowViewModel.LoadInspector(category);
     }
 
-    [RelayCommand] public void AddCategory()
+    [RelayCommand][property: JsonIgnore] public void AddCategory()
     {
         CategoryNodes.Add(new Category());
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -6,12 +7,13 @@ namespace ItemDatabaser.DataStructures;
 
 public partial class PropertyValue : ObservableObject
 {
-    public PropertyDefinition PropertyDefinition { get; init; }
-    
+    [JsonIgnore] public PropertyDefinition PropertyDefinition { get; init; }
+    public Guid PropertyID { get => PropertyDefinition.PropertyID; }
+
     private object? _value;
     public object? Value { get => _value; set { _value = value; Validate(); } }
 
-    [ObservableProperty] private IBrush _validation = Brush.Parse("#f00");
+    [ObservableProperty][property: JsonIgnore] private IBrush _validation = Brush.Parse("#f00");
 
     public PropertyValue(PropertyDefinition propertyDefinition)
     {
@@ -26,6 +28,12 @@ public partial class PropertyValue : ObservableObject
 
     public void Validate()
     {
+        if(Value is null)
+        {
+            Invalid();
+            return;
+        }
+
         try
         {
             if(PropertyDefinition.ValueType is null) throw new Exception("[PropertyValue] Validate() => PropertyDefinition has a null ValueType!");

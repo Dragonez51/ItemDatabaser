@@ -1,16 +1,16 @@
+using System;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ItemDatabaser.DataStructures;
 
 public partial class Category : ObservableObject
 {
-    public ObservableCollection<PropertyDefinition> PropDefs { get; private set; } = new ();
-    public ObservableCollection<Item>     Items         { get; private set; } = new ();
-
-    public ObservableCollection<Category> SubCategories { get; private set; } = new ();
-
-    [ObservableProperty] private string _name = "New Category";
+    [ObservableProperty][property: JsonPropertyOrder(1)] private string _name = "New Category";
+    [JsonPropertyName("Properties")][JsonPropertyOrder(2)]public ObservableCollection<PropertyDefinition> PropDefs { get; private set; } = new ();
+    [JsonPropertyOrder(3)] public ObservableCollection<Item>     Items         { get; private set; } = new ();
+    [JsonIgnore] public ObservableCollection<Category> SubCategories { get; private set; } = new ();
 
     public Category(){}
 
@@ -45,7 +45,7 @@ public partial class Category : ObservableObject
         }
     }
 
-    public void SetType(int propID, string typeName)
+    public void SetType(Guid propID, string typeName)
     {
         foreach(var prop in PropDefs)
         {
@@ -65,7 +65,7 @@ public partial class Category : ObservableObject
         }
     }
 
-    public void SetPropName(int propID, string newName)
+    public void SetPropName(Guid propID, string newName)
     {
         foreach(var prop in PropDefs)
         {
