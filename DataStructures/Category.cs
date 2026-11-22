@@ -8,8 +8,8 @@ namespace ItemDatabaser.DataStructures;
 public partial class Category : ObservableObject
 {
     [ObservableProperty][property: JsonPropertyOrder(1)] private string _name = "New Category";
-    [JsonPropertyName("Properties")][JsonPropertyOrder(2)]public ObservableCollection<PropertyDefinition> PropDefs { get; private set; } = new ();
-    [JsonPropertyOrder(3)] public ObservableCollection<Item>     Items         { get; private set; } = new ();
+    [JsonPropertyName("Properties")][JsonPropertyOrder(2)] public ObservableCollection<PropertyDefinition> PropDefs { get; init; } = new ();
+    [JsonPropertyOrder(3)] public ObservableCollection<Item> Items { get; init; } = new ();
     [JsonIgnore] public ObservableCollection<Category> SubCategories { get; private set; } = new ();
 
     public Category(){}
@@ -122,5 +122,48 @@ public partial class Category : ObservableObject
 
         first.Column+=secondColumn;
         second.Column-=secondColumn;
+    }
+
+    public void LinkProperties()
+    {
+        foreach(var item in Items)
+        {
+            foreach(var value in item.PropValues)
+            {
+                Boolean linked = false;
+                foreach(var definition in PropDefs)
+                {
+                    if(value.PropertyID == definition.PropertyID)
+                    {
+                        value.PropertyDefinition = definition;
+                        value.Validate();
+                        linked = true;
+                        break;
+                    }
+                }
+                if (!linked)
+                {
+                    throw new Exception("[Category] LinkProperties() => import error! PropertyDefinition not found!");
+                }
+            }
+        }
+    }
+
+    public override string ToString()
+    {
+        string propDefsString = "";
+        foreach(var propDef in PropDefs)
+        {
+            propDefsString+="\n"+propDef.ToString();
+        }
+
+        string itemsString = "";
+        if(Items.Count == 0) itemsString = "!empty!";
+        foreach(var item in Items)
+        {
+            itemsString += "\n"+item.ToString();
+        }
+
+        return $"[Category: [Name: {Name}]\n[PropDefs: {propDefsString}]\n[Items: {itemsString}]]";
     }
 }

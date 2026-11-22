@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ItemDatabaser.DataStructures;
@@ -10,8 +9,9 @@ public partial class PropertyDefinition : ObservableObject
     public string Name { get; set; } = "New Property";
     [ObservableProperty] private string? _valueType = "Int32";
     public Guid PropertyID { get; init; }
-    [JsonIgnore] public int Column { get; set; } = 0;
+    public int Column { get; set; } = 1;
 
+    public PropertyDefinition(){}
 
     public PropertyDefinition(int column)
     {
@@ -45,5 +45,10 @@ public partial class PropertyDefinition : ObservableObject
             if(type is null) throw new Exception($"[PropertyDefinition] SetType() => type is null [typeName: {typeName}]");
             ValueType = typeName;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"[PropertyDefinition [Name: {Name}][ValueType: {ValueType}][PropertyID: {PropertyID}][Column: {Column}]]";
     }
 }

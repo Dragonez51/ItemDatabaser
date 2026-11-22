@@ -20,7 +20,8 @@
     <Grid RowDefinitions="35, 1, *">
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Header="Export" Command="{Binding ExportCommand}"></MenuItem>    
+                <MenuItem Header="_Export" Click="Export_Click"/>    
+                <MenuItem Header="_Import" Click="Import_Click"/>    
             </MenuItem>    
         </Menu>
         <GridSplitter Grid.Row="1" Height="1" IsEnabled="False" Background="AliceBlue"/>

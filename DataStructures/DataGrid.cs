@@ -47,6 +47,14 @@ public partial class DataGrid : ObservableObject
         GenerateData();
     }
 
+    public void Redraw()
+    {
+        MainGrid = new Grid();
+        MainGrid.Classes.Add("DataGrid");
+        GenerateColumnsAndHeaders();
+        GenerateData();
+    }
+
     private void GenerateColumnsAndHeaders()
     {
         if(LoadedCategory is null) return;
@@ -187,6 +195,7 @@ public partial class DataGrid : ObservableObject
                     Source = property,
                     Mode = BindingMode.TwoWay
                 });
+                if(property.PropertyDefinition is null) throw new Exception($"[DataGrid] GenerateData() => property.PropertyDefinition is null! [property: {property}]");
                 ValueBox[Grid.ColumnProperty] = property.PropertyDefinition.Column;
                 ValueBox[Grid.RowProperty] = rowIndex;
                 ValueBox.DataContext = property;
