@@ -21,7 +21,7 @@ public partial class StructureViewModel : ViewModelBase
         {
             new PropertyDefinition("Damage", 1),
             new PropertyDefinition("Durability", 2),
-            new PropertyDefinition("IsToxic", 3, typeof(bool)),
+            new PropertyDefinition("IsToxic", 3, typeof(bool).Name),
         };
         CategoryNodes.Add(new Category("Weapons", weaponsProps));
 
@@ -29,7 +29,7 @@ public partial class StructureViewModel : ViewModelBase
         {
             new PropertyDefinition("Defense", 1),
             new PropertyDefinition("Durability", 2),
-            new PropertyDefinition("IsHeavy", 3, typeof(bool)),
+            new PropertyDefinition("IsHeavy", 3, typeof(bool).Name),
         };
         CategoryNodes.Add(new Category("Armor", armorProps));
     }
