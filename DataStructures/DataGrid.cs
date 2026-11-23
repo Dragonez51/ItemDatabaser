@@ -47,6 +47,14 @@ public partial class DataGrid : ObservableObject
         GenerateData();
     }
 
+    public void Redraw()
+    {
+        MainGrid = new Grid();
+        MainGrid.Classes.Add("DataGrid");
+        GenerateColumnsAndHeaders();
+        GenerateData();
+    }
+
     private void GenerateColumnsAndHeaders()
     {
         if(LoadedCategory is null) return;
@@ -187,6 +195,7 @@ public partial class DataGrid : ObservableObject
                     Source = property,
                     Mode = BindingMode.TwoWay
                 });
+                if(property.PropertyDefinition is null) throw new Exception($"[DataGrid] GenerateData() => property.PropertyDefinition is null! [property: {property}]");
                 ValueBox[Grid.ColumnProperty] = property.PropertyDefinition.Column;
                 ValueBox[Grid.RowProperty] = rowIndex;
                 ValueBox.DataContext = property;
@@ -224,7 +233,7 @@ public partial class DataGrid : ObservableObject
         if(comboBox.Name is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox.Name is null!");
         if(comboBox.SelectedItem is null) throw new Exception("[DataGrid] TypeBox_TypeChanged() => comboBox.SelectedItem is null!"); 
 
-        var propID = Int32.Parse(comboBox.Name);
+        var propID = Guid.Parse(comboBox.Name);
 
         LoadedCategory.SetType(propID, (string)comboBox.SelectedItem);
     }
@@ -296,7 +305,7 @@ public partial class DataGrid : ObservableObject
 
         foreach(var item in LoadedCategory.Items)
         {
-            if(item.ItemID != Int32.Parse(id)) continue;
+            if(item.ItemID != Guid.Parse(id)) continue;
 
             LoadedCategory.Items.Remove(item);
             GenerateData();

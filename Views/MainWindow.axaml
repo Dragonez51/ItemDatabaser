@@ -17,10 +17,19 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="*, 3, 3*">
-        <UserControl HorizontalAlignment="Stretch" Grid.Column="0" Content="{Binding Structure}"/>
-        <GridSplitter Grid.Column="1" Width="5" Background="AliceBlue"/>
-        <UserControl HorizontalAlignment="Stretch" Grid.Column="2" Content="{Binding Inspector}"/>
+    <Grid RowDefinitions="35, 1, *">
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Export" Click="Export_Click"/>    
+                <MenuItem Header="_Import" Click="Import_Click"/>    
+            </MenuItem>    
+        </Menu>
+        <GridSplitter Grid.Row="1" Height="1" IsEnabled="False" Background="AliceBlue"/>
+        <Grid Grid.Row="2" ColumnDefinitions="*, 3, 3*">
+            <UserControl HorizontalAlignment="Stretch" Grid.Column="0" Content="{Binding Structure}"/>
+            <GridSplitter Grid.Column="1" Width="5" Background="AliceBlue"/>
+            <UserControl HorizontalAlignment="Stretch" Grid.Column="2" Content="{Binding Inspector}"/>
+        </Grid>
     </Grid>
 
 </Window>

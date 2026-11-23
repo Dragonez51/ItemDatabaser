@@ -1,4 +1,6 @@
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -6,47 +8,68 @@ namespace ItemDatabaser.DataStructures;
 
 public partial class PropertyValue : ObservableObject
 {
-    public PropertyDefinition PropertyDefinition { get; init; }
-    
+    [JsonIgnore] public PropertyDefinition? PropertyDefinition { get; set; }
+    public Guid? PropertyID { get; init; }
+
     private object? _value;
     public object? Value { get => _value; set { _value = value; Validate(); } }
 
-    [ObservableProperty] private IBrush _validation = Brush.Parse("#f00");
+    [ObservableProperty][property: JsonIgnore] private IBrush _validation = Brush.Parse("#f00");
+
+    public PropertyValue(){}
 
     public PropertyValue(PropertyDefinition propertyDefinition)
     {
         PropertyDefinition = propertyDefinition;
+        PropertyID = PropertyDefinition.PropertyID;
     }
 
     public PropertyValue(PropertyDefinition propertyDefinition, object value)
     {
-        PropertyDefinition = propertyDefinition;
         Value = value;
+        PropertyDefinition = propertyDefinition;
+        PropertyID = PropertyDefinition.PropertyID;
     }
 
-    public void Validate()
+    public bool Validate()
     {
+        if(Value is null)
+        {
+            Invalid();
+            return false;
+        }
+
         try
         {
-            if(PropertyDefinition.ValueType is null) throw new Exception("[PropertyValue] Validate() => PropertyDefinition has a null ValueType!");
+            if(PropertyDefinition?.ValueType is null) throw new Exception("[PropertyValue] Validate() => PropertyDefinition has a null ValueType!");
             var type = Type.GetType(PropertyDefinition.ValueType);
             if(type is null){ type = Type.GetType("System."+PropertyDefinition.ValueType); if(type is null) throw new Exception("[PropertyValue] Validate() => did not find type of '"+PropertyDefinition.ValueType+"'!"); }
+            if(Value is JsonElement)
+            { 
+                Value = ((JsonElement)Value).GetString();
+            }
             var convert = Convert.ChangeType(Value, type);
             if(convert is null)
             {
                 Invalid();
-                return;
+                return false;
             }
             Valid();
-            return;
+            return true;
         }
         catch (Exception)
         {
+            // Debug.WriteLine($"[PropertyValue] Validate() => Value.Type: {Value.GetType()}");
             Invalid();
-            return;
+            return false;
         }
     }
 
     private void Valid() => Validation = Brush.Parse("#0f0");
     private void Invalid() => Validation = Brush.Parse("#f00");
+
+    public override string ToString()
+    {
+        return $"[PropertyValue [PropertyID: {PropertyID}][Value: {Value}]]";
+    }
 }

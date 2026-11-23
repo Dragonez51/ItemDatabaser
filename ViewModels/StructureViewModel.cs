@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Input;
 using ItemDatabaser.DataStructures;
@@ -7,11 +9,23 @@ namespace ItemDatabaser.ViewModels;
 
 public partial class StructureViewModel : ViewModelBase
 {
-    public ObservableCollection<Category> CategoryNodes { get; private set; } = new ();
+    [JsonPropertyOrder(0)] public string FormatVersion { get; init; } = "0.3.0";
+    [JsonPropertyOrder(1)] public string DatabaseName { get; init; } = "TestDB";
+    [JsonPropertyOrder(2)][JsonPropertyName("Categories")] public ObservableCollection<Category> CategoryNodes { get; init; } = new ();
 
-    public StructureViewModel()
+    public StructureViewModel(){}
+
+    public StructureViewModel(bool initTestDB)
     {
-        CreateTestStructure();
+        if(initTestDB) CreateTestStructure();
+    }
+
+    public StructureViewModel(string formatVersion, string databaseName, ObservableCollection<Category> categories)
+    {
+        Debug.WriteLine("[StructureViewModel] (formatVersion, databaseName, categories)");
+        FormatVersion = formatVersion;
+        DatabaseName = databaseName;
+        CategoryNodes = categories;
     }
 
 // This creates a basic template for testing during development stage
@@ -44,8 +58,26 @@ public partial class StructureViewModel : ViewModelBase
         if(!(category is null)) MainWindowViewModel.LoadInspector(category);
     }
 
-    [RelayCommand] public void AddCategory()
+    [RelayCommand][property: JsonIgnore] public void AddCategory()
     {
         CategoryNodes.Add(new Category());
+    }
+
+    public void LinkProperties()
+    {
+        foreach(var category in CategoryNodes)
+        {
+            category.LinkProperties();
+        }
+    }
+
+    public override string ToString()
+    {
+        string categoriesString = "";
+        foreach(var category in CategoryNodes)
+        {
+            categoriesString+="\n"+category;
+        }
+        return $"[StructureViewModel [FormatVersion: {FormatVersion}][DatabaseName: {DatabaseName}]\n[Categories: {categoriesString}]]";
     }
 }

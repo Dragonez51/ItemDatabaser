@@ -5,25 +5,25 @@ namespace ItemDatabaser.DataStructures;
 
 public partial class PropertyDefinition : ObservableObject
 {
-    public static int nextID = 0;
 
     public string Name { get; set; } = "New Property";
-    public int PropertyID { get; init; }
-    public int Column { get; set; } = 0;
-
     [ObservableProperty] private string? _valueType = "Int32";
+    public Guid PropertyID { get; init; }
+    public int Column { get; set; } = 1;
+
+    public PropertyDefinition(){}
 
     public PropertyDefinition(int column)
     {
         Column = column;
-        PropertyID = nextID++;
+        PropertyID = Guid.NewGuid();
     }
 
     public PropertyDefinition(string name, int column)
     {
         Name = name;
         Column = column;
-        PropertyID = nextID++;
+        PropertyID = Guid.NewGuid();
     }
 
     public PropertyDefinition(string name, int column, string type)
@@ -31,7 +31,7 @@ public partial class PropertyDefinition : ObservableObject
         Name = name;
         Column = column;
         ValueType = type;
-        PropertyID = nextID++;
+        PropertyID = Guid.NewGuid();
     }
 
     public void TrySetType(string? typeName)
@@ -45,5 +45,10 @@ public partial class PropertyDefinition : ObservableObject
             if(type is null) throw new Exception($"[PropertyDefinition] SetType() => type is null [typeName: {typeName}]");
             ValueType = typeName;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"[PropertyDefinition [Name: {Name}][ValueType: {ValueType}][PropertyID: {PropertyID}][Column: {Column}]]";
     }
 }

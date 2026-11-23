@@ -7,9 +7,15 @@ FIXED    - Add new property does not validate for new value text boxes of existi
 ADDED    - Delete button for properties;
 FIXED    - If there are two properties of the same name, the first from left will be updated. (Distinguish them);
 CHANGED  - Move DataGrid from InspectorViewModel to a different class;
+ADD DONE - Import handling from JSON;
+ADD DONE - Export dialog of filepath;
 
 FIX      - Upper property column panel (the one for managing property name + position) does not stretch when it's smaller than the lower panel (?styling issue?)
 FIX      - If columns are moved, clicking tab jumps across different rows;
+ADD  *   - Export types: Columns, Items, All;
+ADD      - Export only if database is valid;
+ADD      - Error / Warning / Ok dialog;
+ADD      - Quick save if a file is ?selected? (Export => Save; Import => Open);
 
 REMAKE:
 RMK DONE - Data structure of categories-items should be: Category[PropertyDefinition | Items], Item[PropertyValue] in order not to have too many type variables;
@@ -21,8 +27,8 @@ ROADMAP:
 ADD DONE - InspectorView DataGrid column manipulation - each prop should contain column id (that's why we should separate category properties and item properties);
 ADD DONE - InspectorView delete property button;
 ADD DONE - functionality for AddCategory button;
-ADD      - Export handling (JSON / MyDS / CSV?);
-ADD      - Import handling (JSON / MyDS / CSV?);
+ADD DONE - Export handling (JSON);
+ADD DONE - Import handling (JSON);
 ADD  OPT - SubCategories;
 OPTIMIZE - Optimize Data Generation.                (!COULD BE THE LAST THING TO DO BEFORE THE FIRST RELEASE!)
 ADD  OPT - Settings (preferences for the app such as themes and behavior);
