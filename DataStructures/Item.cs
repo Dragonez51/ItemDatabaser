@@ -74,6 +74,15 @@ public class Item
         }
     }
 
+    public bool IsValid()
+    {
+        foreach(var prop in PropValues)
+        {
+            if(!prop.IsValid) return false;
+        }
+        return true;
+    }
+
     public override string ToString()
     {
         string propValuesString = "";

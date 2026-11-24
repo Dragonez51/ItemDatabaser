@@ -1,7 +1,9 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Avalonia.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ItemDatabaser.DataStructures;
 
@@ -9,8 +11,11 @@ namespace ItemDatabaser.ViewModels;
 
 public partial class StructureViewModel : ViewModelBase
 {
-    [JsonPropertyOrder(0)] public string FormatVersion { get; init; } = "0.3.0";
-    [JsonPropertyOrder(1)] public string DatabaseName { get; init; } = "TestDB";
+    // TODO:
+    //  1. Make a Database class from this file.
+
+    [JsonPropertyOrder(0)] public string FormatVersion { get; init; } = "0.3.1";
+    [ObservableProperty][property: JsonPropertyOrder(1)] private string _databaseName = "New Database";
     [JsonPropertyOrder(2)][JsonPropertyName("Categories")] public ObservableCollection<Category> CategoryNodes { get; init; } = new ();
 
     public StructureViewModel(){}
@@ -69,6 +74,16 @@ public partial class StructureViewModel : ViewModelBase
         {
             category.LinkProperties();
         }
+    }
+
+    public bool ValidateDatabase()
+    {
+        foreach(var category in CategoryNodes)
+        {
+            if(!category.Validate()) return false;
+        }
+
+        return true;
     }
 
     public override string ToString()

@@ -11,13 +11,11 @@ public partial class InspectorViewModel : ViewModelBase
 
     [ObservableProperty] private DataGrid? _data; // table structure (mb rename)
     [ObservableProperty] private Grid? _dataGrid; // Avalonia object to link the visuals
-    [ObservableProperty] private string? _categoryName; // category name that is presented at the top of InspectorView
 
     public void Load(Category category)
     {
         Data = new DataGrid(category);
         DataGrid = Data.MainGrid;
-        CategoryName = category.Name;
         ShowProperties();
     }
 

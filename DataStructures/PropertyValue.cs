@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Avalonia.Media;
@@ -15,6 +16,8 @@ public partial class PropertyValue : ObservableObject
     public object? Value { get => _value; set { _value = value; Validate(); } }
 
     [ObservableProperty][property: JsonIgnore] private IBrush _validation = Brush.Parse("#f00");
+
+    [ObservableProperty][property: JsonIgnore] private bool _isValid = false;
 
     public PropertyValue(){}
 
@@ -65,8 +68,8 @@ public partial class PropertyValue : ObservableObject
         }
     }
 
-    private void Valid() => Validation = Brush.Parse("#0f0");
-    private void Invalid() => Validation = Brush.Parse("#f00");
+    private void Valid() { Validation = Brush.Parse("#0f0"); IsValid = true; }
+    private void Invalid() { Validation = Brush.Parse("#f00"); IsValid = false; }
 
     public override string ToString()
     {

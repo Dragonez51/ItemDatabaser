@@ -149,6 +149,19 @@ public partial class Category : ObservableObject
         }
     }
 
+    public bool Validate()
+    {
+        foreach(var item in Items)
+        {
+            if(!item.IsValid()) return false;
+        }
+        foreach(var subCategory in SubCategories)
+        {
+            if(!subCategory.Validate()) return false;
+        }
+        return true;
+    }
+
     public override string ToString()
     {
         string propDefsString = "";

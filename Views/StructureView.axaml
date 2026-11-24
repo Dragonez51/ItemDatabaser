@@ -6,7 +6,7 @@
   <Grid RowDefinitions="9*, 1*">
     <StackPanel>
       <Border Classes="Base">
-        <TextBlock Text="Categories:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox Text="{Binding DatabaseName, Mode=TwoWay}" PlaceholderText="Database name" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
       </Border>
       <Border Classes="Base">
           <ScrollViewer>

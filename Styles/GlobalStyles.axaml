@@ -4,9 +4,11 @@
     <Design.PreviewWith>
         <Border Padding="20" Background="#000">
             <Border Classes="Base">
-                <Grid Classes="DataGrid" ColumnDefinitions="*, *">
-                    <TextBlock Grid.Column="0" Foreground="#fff" Text="Column:0 Row:0"/>
-                    <TextBlock Grid.Column="1" Foreground="#fff" Text="Column:1 Row:0"/>
+                <Grid Classes="DataGrid" ColumnDefinitions="*, *" RowDefinitions="*,*">
+                    <TextBlock Grid.Column="0" Grid.Row="0" Foreground="#fff" Text="C:0 R:0"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Foreground="#fff" Text="C:1 R:0"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Foreground="#fff" Text="C:0 R:1"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1" Foreground="#fff" Text="C:1 R:1"/>
                 </Grid>
             </Border>
         </Border>

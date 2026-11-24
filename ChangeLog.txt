@@ -1,0 +1,13 @@
+Version: 0.3.2
+
+- Added database name edit,
+- Added Horizontal items scrolling,
+- Added optional database validate function,
+- Added database validation before export (unable to export if database is invalid),
+
+- Removed Corner radius from TextBox in InspectorView,
+
+- Fixed Import cancel error,
+
+- Upper header panel is always fitted,
+- Moved Category name editor text to left (was center),

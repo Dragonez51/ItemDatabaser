@@ -8,10 +8,10 @@
         >
     <Panel>
         <TextBlock Text="Select a node!" IsVisible="{Binding IsTextVisible}" HorizontalAlignment="Center"/>
-        <ScrollViewer>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" IsVisible="{Binding IsPropertiesVisible}">
                 <Border Classes="Base">
-                    <TextBox Text="{Binding CategoryName, Mode=TwoWay}" TextAlignment="Center" FontSize="20" FontWeight="Bold"/>
+                    <TextBox Text="{Binding Data.LoadedCategory.Name, Mode=TwoWay}" PlaceholderText="Category name" TextAlignment="Left" FontSize="20" FontWeight="Bold"/>
                 </Border>
                 <Border Classes="Base">
                     <ContentControl Content="{Binding DataGrid}"/>

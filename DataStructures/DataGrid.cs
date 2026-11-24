@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Media.Imaging;
@@ -14,6 +13,9 @@ public partial class DataGrid : ObservableObject
 {
     // TODO: 
     //  1. Split elements generation in GenerateData() to different functions (example: GenerateInput(), GenerateDeleteButton(), etc.)
+    //  2. After TODO#1, create a class of UserControl that will handle draw method.
+    //  3. Think through how to redraw only an added row (rather than every single row) (same for added/deleted properties (columns)) 
+    //  4. Think through how to get if a row is visible.
 
     // Maybe move it to a different place?
     [ObservableProperty] private static List<string> _types = new List<string>(){
@@ -83,19 +85,21 @@ public partial class DataGrid : ObservableObject
             StackPanel sp = new StackPanel(){ Orientation = Avalonia.Layout.Orientation.Vertical };
             sp.Classes.Add("HeaderStackPanel");
 
-            StackPanel innerSP = new StackPanel(){ Orientation = Avalonia.Layout.Orientation.Horizontal };
-            innerSP.Classes.Add("HeaderStackPanel");
+            Grid upperHeaderGrid = new Grid { ColumnDefinitions = new ColumnDefinitions{ new ColumnDefinition(GridLength.Star), new ColumnDefinition(GridLength.Parse("20"))} };
 
             TextBox HeaderName = new TextBox(){ Text = property.Name };
+            HeaderName.PlaceholderText = "Property name";
             HeaderName.AddHandler(TextBox.TextChangedEvent, HeaderBox_TextChanged);
             HeaderName.AddHandler(TextBox.GotFocusEvent, HeaderBox_GotFocus);
             HeaderName.Classes.Add("HeaderBox");
+            HeaderName[Grid.ColumnProperty] = 0;
 
             var modButtonImg = new Image(){ Source = new Bitmap(AssetLoader.Open(new Uri("avares://ItemDatabaser/Assets/Img/ModButtonImg.png"))) };
             modButtonImg.Classes.Add("ButtonImage");
             modButtonImg.Width = 10;
             Button ModButton = new Button(){ Content = modButtonImg };
             ModButton.Width = 20;
+            ModButton[Grid.ColumnProperty] = 1;
 
             var ModFlyout = new MenuFlyout();
 
@@ -124,14 +128,13 @@ public partial class DataGrid : ObservableObject
 
             ModButton.Flyout = ModFlyout;
 
-            innerSP.Children.Add(HeaderName);
-            innerSP.Children.Add(ModButton);
+            upperHeaderGrid.Children.Add(HeaderName);
+            upperHeaderGrid.Children.Add(ModButton);
 
-            sp.Children.Add(innerSP);
+            sp.Children.Add(upperHeaderGrid);
 
             ComboBox TypeBox = new ComboBox() { ItemsSource = Types };
             TypeBox.SelectedItem = property.ValueType;
-            // TypeBox.Bind(ComboBox.SelectedItemProperty, new ReflectionBinding(nameof(property.ValueType)){ Source = property });
             TypeBox.Name = Convert.ToString(property.PropertyID);
             TypeBox.AddHandler(ComboBox.SelectionChangedEvent, TypeBox_TypeChanged);
             TypeBox.Classes.Add("TypeBox");
@@ -176,6 +179,7 @@ public partial class DataGrid : ObservableObject
             MainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
 
             TextBox NameBox = new TextBox();
+            NameBox.PlaceholderText = "Item name";
             NameBox.Bind(TextBox.TextProperty, new ReflectionBinding(nameof(item.Name))
             {
                 Source = item,

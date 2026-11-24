@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -14,6 +15,10 @@ public partial class MainWindow : Window
 
     private async void Export_Click(object? sender, RoutedEventArgs e)
     {
+        var isValid = (DataContext as MainWindowViewModel)?.Structure.ValidateDatabase();
+        if(isValid is null) return;
+        if(!(bool)isValid){ Debug.WriteLine("[MainWindow.axaml.cs] Export_Click() => Cannot export! Database is not valid!"); return; }
+
         var topLevel = GetTopLevel(this);
 
         if(topLevel is null) return;
@@ -49,9 +54,14 @@ public partial class MainWindow : Window
             AllowMultiple = false
         });
 
-        if(file is not null)
+        if(file is not null && file.Count == 1)
         {
             (DataContext as MainWindowViewModel)?.Import(file[0].Path);
         }
+    }
+
+    private void Database_Validate(object? sender, RoutedEventArgs args)
+    {
+        Debug.WriteLine($"[MainWindow.axaml.cs] Database_Validate() => [IsValid: {(DataContext as MainWindowViewModel)?.Structure.ValidateDatabase()}]");
     }
 }

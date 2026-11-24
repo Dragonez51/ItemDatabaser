@@ -9,19 +9,24 @@ FIXED    - If there are two properties of the same name, the first from left wil
 CHANGED  - Move DataGrid from InspectorViewModel to a different class;
 ADD DONE - Import handling from JSON;
 ADD DONE - Export dialog of filepath;
+FIXED    - Upper property column panel (the one for managing property name + position) does not stretch when it's smaller than the lower panel (?styling issue?)
+ADDED    - Horizontal items scrolling
 
-FIX      - Upper property column panel (the one for managing property name + position) does not stretch when it's smaller than the lower panel (?styling issue?)
-FIX      - If columns are moved, clicking tab jumps across different rows;
+FIX  !   - If columns are moved, clicking tab jumps across different rows;
 ADD  *   - Export types: Columns, Items, All;
-ADD      - Export only if database is valid;
-ADD      - Error / Warning / Ok dialog;
+ADD  !   - Export only if database is valid;
+ADD  !   - Error / Warning / Ok dialog;
 ADD      - Quick save if a file is ?selected? (Export => Save; Import => Open);
+ADD      - Move item position;
+ADD  !   - Make the whole table more like a table than rows of TextBox'es (Add an option to select many rows / columns like in excel) (connects to optimization)
 
 REMAKE:
 RMK DONE - Data structure of categories-items should be: Category[PropertyDefinition | Items], Item[PropertyValue] in order not to have too many type variables;
 RMK DONE - PropertyDefinition & PropertyValue do not have to use Type type. (It is forbidden during serialization)(also, it is not needed for anything)
 
-RMK      - Data generation in InspectorViewModel. Optimize this generation so that new Items nor new Properties do not have to redraw the full DataGrid.
+RMK      - Data generation in InspectorViewModel. Optimize this generation so that new Items nor new Properties do not have to redraw the full DataGrid. + Use culling method.
+RPS      - Reposition Add item button since it collides with horizontal scroll behavior
+RPS      - Set category name editor to left, since with each new property it moves to the right making it uncomfortable to edit.
 
 ROADMAP:
 ADD DONE - InspectorView DataGrid column manipulation - each prop should contain column id (that's why we should separate category properties and item properties);
