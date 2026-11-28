@@ -11,14 +11,15 @@ ADD DONE - Import handling from JSON;
 ADD DONE - Export dialog of filepath;
 FIXED    - Upper property column panel (the one for managing property name + position) does not stretch when it's smaller than the lower panel (?styling issue?)
 ADDED    - Horizontal items scrolling
+ADDED    - Export only if database is valid;
+ADDED    - Error / Warning / Ok dialog;
 
 FIX  !   - If columns are moved, clicking tab jumps across different rows;
 ADD  *   - Export types: Columns, Items, All;
-ADD  !   - Export only if database is valid;
-ADD  !   - Error / Warning / Ok dialog;
 ADD      - Quick save if a file is ?selected? (Export => Save; Import => Open);
 ADD      - Move item position;
 ADD  !   - Make the whole table more like a table than rows of TextBox'es (Add an option to select many rows / columns like in excel) (connects to optimization)
+ADD      - Better styling (backgrounds, icons etc.);
 
 REMAKE:
 RMK DONE - Data structure of categories-items should be: Category[PropertyDefinition | Items], Item[PropertyValue] in order not to have too many type variables;

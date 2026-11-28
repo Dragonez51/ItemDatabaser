@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -17,10 +16,13 @@ public partial class MainWindow : Window
     {
         var isValid = (DataContext as MainWindowViewModel)?.Structure.ValidateDatabase();
         if(isValid is null) return;
-        if(!(bool)isValid){ Debug.WriteLine("[MainWindow.axaml.cs] Export_Click() => Cannot export! Database is not valid!"); return; }
+        if(!(bool)isValid)
+        { 
+            MainWindowViewModel.NotificationService.Show("Cannot export, database is not valid!", "error");
+            return;
+        }
 
         var topLevel = GetTopLevel(this);
-
         if(topLevel is null) return;
 
         var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
@@ -60,8 +62,13 @@ public partial class MainWindow : Window
         }
     }
 
-    private void Database_Validate(object? sender, RoutedEventArgs args)
+    public void Database_Validate(object? sender, RoutedEventArgs args)
     {
-        Debug.WriteLine($"[MainWindow.axaml.cs] Database_Validate() => [IsValid: {(DataContext as MainWindowViewModel)?.Structure.ValidateDatabase()}]");
+        bool? isValid_null = (DataContext as MainWindowViewModel)?.Structure.ValidateDatabase();
+        if(isValid_null is null) throw new System.Exception("[MainWindow] Database_Validate()=> isValid is null!");
+        bool isValid = (bool)isValid_null;
+        string message = "Database is " + (isValid ? "valid!" : "invalid!");
+        string type = isValid ? "ok" : "error";
+        MainWindowViewModel.NotificationService.Show(message, type);
     }
 }

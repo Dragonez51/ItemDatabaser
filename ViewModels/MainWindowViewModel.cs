@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ItemDatabaser.DataStructures;
+using ItemDatabaser.Helpers;
 
 namespace ItemDatabaser.ViewModels;
 
@@ -10,6 +11,8 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty] private static StructureViewModel _structure = new StructureViewModel();
     public static InspectorViewModel Inspector { get; private set; } = new InspectorViewModel();
+
+    public static NotificationService NotificationService { get; } = new ();
 
     public static void LoadInspector(object data)
     {

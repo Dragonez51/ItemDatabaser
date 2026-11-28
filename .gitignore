@@ -12,3 +12,7 @@ ItemDatabaser.sln
 
 #Test files:
 TestDB.json
+
+#other
+.DS_Store
+DataStructures/.DS_Store
